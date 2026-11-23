@@ -45,13 +45,30 @@ button{font:inherit;cursor:pointer}.app{min-height:100vh;display:flex}.sidebar{w
 .emptyrow{text-align:center;padding:26px;color:var(--muted)}
 @media(max-width:650px){.formgrid{grid-template-columns:1fr}.field.full{grid-column:auto}.asset-toolbar{align-items:stretch}.searchbox{width:100%}}
 
-</style>
+
+.authscreen{min-height:100vh;display:grid;place-items:center;background:linear-gradient(135deg,#10243a,#1c4664);padding:20px}
+.authcard{width:min(420px,100%);background:#fff;border-radius:16px;padding:30px;box-shadow:0 25px 80px #07182766}
+.authbrand{display:flex;align-items:center;gap:12px;margin-bottom:22px}.authbrand .brandmark{width:44px;height:44px}.authcard h1{font-size:22px;margin:0 0 6px}.authcard p{font-size:12px;color:var(--muted);margin:0 0 20px}.authcard .field{margin:12px 0}.authcard .btn{width:100%;padding:12px}.authmessage{font-size:12px;margin-top:12px;color:#b54747;min-height:18px}.authhint{font-size:10px;color:#8291a0;margin-top:15px}.app{display:none}.app.ready{display:flex}
+
 </head>
 <body>
-<div class="app">
+<div class="authscreen" id="authScreen">
+ <div class="authcard">
+  <div class="authbrand"><div class="brandmark">QR</div><div><strong>QR Inspection System</strong><div class="sub">ADMIN CONSOLE</div></div></div>
+  <h1>Login Admin</h1><p>Masuk menggunakan akun Supabase Auth yang terdaftar pada organisasi.</p>
+  <form id="loginForm">
+   <div class="field"><label for="loginEmail">Email</label><input id="loginEmail" type="email" required autocomplete="username" placeholder="admin@perusahaan.com"></div>
+   <div class="field"><label for="loginPassword">Password</label><input id="loginPassword" type="password" required autocomplete="current-password" placeholder="Password akun"></div>
+   <button class="btn primary" id="loginButton" type="submit">Masuk</button>
+  </form>
+  <div class="authmessage" id="authMessage"></div>
+  <div class="authhint">Akses dibatasi berdasarkan keanggotaan organisasi dan kebijakan RLS Supabase.</div>
+ </div>
+</div>
+<div class="app" id="mainApp">
 <aside class="sidebar">
  <div class="brand"><div class="brandmark">QR</div><div><strong>QR Inspection</strong><small>SYSTEM · ADMIN</small></div></div>
- <div class="org"><small>Current organization</small><b>Elodie Demo ▾</b></div>
+ <div class="org"><small>Current organization</small><b id="orgLabel">Elodie Demo</b></div>
  <div class="navlabel">Workspace</div>
  <nav class="nav" id="nav">
   <button class="active" data-view="overview"><span class="ico">▦</span><span>Overview</span></button>
@@ -68,7 +85,7 @@ button{font:inherit;cursor:pointer}.app{min-height:100vh;display:flex}.sidebar{w
  <div class="sidebottom">QR Inspection System<br>Admin Console · UI Preview</div>
 </aside>
 <main class="main">
- <header class="topbar"><div class="crumb">Workspace&nbsp; / &nbsp;<b id="crumb">Overview</b></div><div class="topright"><div class="status"><span class="dot"></span> Demo interface</div><div class="avatar">AD</div></div></header>
+ <header class="topbar"><div class="crumb">Workspace&nbsp; / &nbsp;<b id="crumb">Overview</b></div><div class="topright"><div class="status"><span class="dot"></span><span id="connectionStatus">Supabase</span></div><span id="signedInUser" class="muted" style="font-size:11px"></span><button class="btn" onclick="signOutUser()">Keluar</button></div></header>
  <div class="content">
   <section class="view active" id="view-overview">
    <div class="pagehead"><div><div class="eyebrow">Industrial inspection platform</div><h1>Overview</h1><p>Ringkasan aktivitas inspeksi dan kondisi aset dalam organisasi Anda.</p></div><div class="actions"><button class="btn" onclick="alert('Filter periode akan dihubungkan pada tahap integrasi.')">▤&nbsp; 30 Hari Terakhir</button><button class="btn primary" onclick="showView('assets')">＋ Tambah Aset</button></div></div>
@@ -101,9 +118,9 @@ button{font:inherit;cursor:pointer}.app{min-height:100vh;display:flex}.sidebar{w
      <div class="searchbox"><span>⌕</span><input id="assetSearch" placeholder="Cari kode aset, nama, atau lokasi..." oninput="renderAssets()"></div>
      <div style="display:flex;gap:8px;flex-wrap:wrap"><select id="assetCategoryFilter" class="filterselect" onchange="renderAssets()"><option value="">Semua kategori</option><option>Fire Safety</option><option>Electrical</option><option>Machine</option><option>Utility</option><option>Other</option></select><select id="assetStatusFilter" class="filterselect" onchange="renderAssets()"><option value="">Semua status</option><option>Active</option><option>Inactive</option></select></div>
     </div>
-    <div class="panelhead"><div><h3>Daftar Aset</h3><div class="sub">Data contoh tersimpan di browser ini saja</div></div><span class="pill pending">Demo mode</span></div>
+    <div class="panelhead"><div><h3>Daftar Aset</h3><div class="sub">Data aset tersimpan di Supabase</div></div><span class="pill ok">Live database</span></div>
     <div class="asset-table-wrap"><table><thead><tr><th>Kode Aset</th><th>Nama Aset</th><th>Kategori</th><th>Lokasi</th><th>QR ID</th><th>Status</th><th>Aksi</th></tr></thead><tbody id="assetRows"></tbody></table></div>
-    <div class="notice" style="margin-top:15px">Penting: perubahan pada halaman demo ini hanya tersimpan di browser (localStorage), belum tersimpan ke Supabase. QR ID dibuat sekali saat aset dibuat dan tidak berubah ketika aset diedit. Gunakan hanya data uji, bukan data operasional.</div>
+    <div class="notice" style="margin-top:15px">Data ditampilkan berdasarkan organisasi dari akun yang sedang login. QR token dibuat satu kali oleh database dan tidak diubah saat aset diedit.</div>
    </div>
   </section>
   <section class="view" id="view-qr"><div class="pagehead"><div><div class="eyebrow">Asset identification</div><h1>QR Code Management</h1><p>Buat dan kelola QR Code unik untuk setiap aset.</p></div><button class="btn primary">＋ Generate QR</button></div><div class="card placeholder"><div class="bigico">▦</div><h2>QR Code Management</h2><p>Fitur generate QR, preview label, unduh PNG/PDF, dan cetak label akan dikembangkan pada tahap berikutnya.</p><span class="pill pending">Kerangka UI · Menunggu integrasi</span></div></section>
@@ -125,6 +142,9 @@ button{font:inherit;cursor:pointer}.app{min-height:100vh;display:flex}.sidebar{w
     <div class="field"><label for="assetName">Nama Aset *</label><input id="assetName" required placeholder="Contoh: APAR Powder 6 kg"></div>
     <div class="field"><label for="assetCategory">Kategori *</label><select id="assetCategory" required><option value="">Pilih kategori</option><option>Fire Safety</option><option>Electrical</option><option>Machine</option><option>Utility</option><option>Other</option></select></div>
     <div class="field"><label for="assetLocation">Lokasi *</label><input id="assetLocation" required placeholder="Contoh: Produksi Line 1"></div>
+    <div class="field"><label for="assetBrand">Brand</label><input id="assetBrand" placeholder="Contoh: Yamato"></div>
+    <div class="field"><label for="assetModel">Model</label><input id="assetModel" placeholder="Model aset"></div>
+    <div class="field"><label for="assetSerial">Serial Number</label><input id="assetSerial" placeholder="Nomor seri"></div>
     <div class="field"><label for="assetStatus">Status</label><select id="assetStatus"><option>Active</option><option>Inactive</option></select></div>
     <div class="field full"><label for="assetDescription">Keterangan</label><textarea id="assetDescription" placeholder="Informasi tambahan aset (opsional)"></textarea></div>
    </div>
@@ -136,7 +156,15 @@ button{font:inherit;cursor:pointer}.app{min-height:100vh;display:flex}.sidebar{w
 
 </main>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+// Project URL dan Publishable Key Supabase untuk frontend. Jangan pernah gunakan service_role/secret key di sini.
+const SUPABASE_URL = "https://kilrmcgjgipjnrxateyh.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable__32xG6J6OsOl1UxEjpphhg_Jw0xo_mN";
+const ORGANIZATION_FALLBACK_NAME = "Elodie Demo";
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+let currentUser = null, currentOrgId = null, currentMember = null, assetRows = [];
+
 function showView(name){
  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
  const target=document.getElementById('view-'+name); if(target) target.classList.add('active');
@@ -145,70 +173,76 @@ function showView(name){
 }
 document.querySelectorAll('#nav button').forEach(b=>b.addEventListener('click',()=>showView(b.dataset.view)));
 
-let demoAssets = [];
-const demoSeed = [
- {id:"demo-asset-001",code:"APAR-001",name:"APAR Powder 6 kg",category:"Fire Safety",location:"Produksi Line 1",status:"Active",description:"Contoh data aset",qrId:"QR-ELD-APAR001"},
- {id:"demo-asset-002",code:"PANEL-014",name:"Electrical Panel",category:"Electrical",location:"Utility Room",status:"Active",description:"Contoh data aset",qrId:"QR-ELD-PANEL014"},
- {id:"demo-asset-003",code:"PUMP-003",name:"Water Pump",category:"Utility",location:"Pump House",status:"Active",description:"Contoh data aset",qrId:"QR-ELD-PUMP003"}
-];
-function loadDemoAssets(){
- try { const saved=localStorage.getItem("qrInspectionAdminDemoAssets"); demoAssets=saved?JSON.parse(saved):demoSeed.slice(); }
- catch(e){ demoAssets=demoSeed.slice(); }
- renderAssets();
+function setAuthMessage(message, good=false){const el=document.getElementById('authMessage');el.textContent=message||'';el.style.color=good?'#198653':'#b54747';}
+async function signInUser(e){
+ e.preventDefault();const btn=document.getElementById('loginButton');btn.disabled=true;btn.textContent='Memeriksa akun...';setAuthMessage('');
+ const email=document.getElementById('loginEmail').value.trim(),password=document.getElementById('loginPassword').value;
+ const {data,error}=await supabaseClient.auth.signInWithPassword({email,password});
+ btn.disabled=false;btn.textContent='Masuk';
+ if(error){setAuthMessage('Login gagal: '+error.message);return;}
+ await initializeSession(data.user);
 }
-function persistDemoAssets(){ localStorage.setItem("qrInspectionAdminDemoAssets",JSON.stringify(demoAssets)); }
+async function initializeSession(user){
+ currentUser=user;
+ const {data:members,error}=await supabaseClient.from('elodie_inspection_members').select('organization_id,full_name,role,is_active').eq('user_id',user.id).eq('is_active',true);
+ if(error){setAuthMessage('Gagal membaca keanggotaan: '+error.message);await supabaseClient.auth.signOut();return;}
+ if(!members||members.length===0){setAuthMessage('Akun berhasil login, tetapi belum terdaftar sebagai anggota organisasi QR Inspection.');await supabaseClient.auth.signOut();return;}
+ // Sementara pilih organisasi pertama yang aktif; pemilih multi-organisasi dibuat pada tahap berikutnya.
+ currentMember=members[0];currentOrgId=currentMember.organization_id;
+ document.getElementById('orgLabel').textContent=ORGANIZATION_FALLBACK_NAME;
+ document.getElementById('signedInUser').textContent=(currentMember.full_name||user.email)+' · '+currentMember.role;
+ document.getElementById('authScreen').style.display='none';document.getElementById('mainApp').classList.add('ready');
+ document.getElementById('connectionStatus').textContent='Supabase terhubung';
+ const canManage=['admin','supervisor'].includes(currentMember.role);
+ document.querySelector('#view-assets .pagehead .btn.primary').style.display=canManage?'':'none';
+ await loadAssets();
+}
+async function signOutUser(){await supabaseClient.auth.signOut();currentUser=null;currentOrgId=null;currentMember=null;document.getElementById('mainApp').classList.remove('ready');document.getElementById('authScreen').style.display='grid';}
+document.getElementById('loginForm').addEventListener('submit',signInUser);
+supabaseClient.auth.getSession().then(async({data})=>{if(data.session)await initializeSession(data.session.user);});
+supabaseClient.auth.onAuthStateChange(async(event,session)=>{if(event==='SIGNED_OUT'){document.getElementById('mainApp').classList.remove('ready');document.getElementById('authScreen').style.display='grid';}});
+
+function escapeHtml(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function mapAsset(row){return {id:row.id,code:row.asset_code,name:row.asset_name,category:row.asset_type,location:row.location,brand:row.brand||'',model:row.model||'',serial:row.serial_number||'',status:row.is_active?'Active':'Inactive',description:row.notes||'',qrId:row.qr_token};}
+async function loadAssets(){
+ if(!currentOrgId)return;const body=document.getElementById('assetRows');body.innerHTML='<tr><td colspan="7" class="emptyrow">Memuat data aset...</td></tr>';
+ const {data,error}=await supabaseClient.from('elodie_inspection_assets').select('id,organization_id,asset_code,asset_name,asset_type,location,brand,model,serial_number,qr_token,notes,is_active,created_at').eq('organization_id',currentOrgId).order('created_at',{ascending:false});
+ if(error){body.innerHTML='<tr><td colspan="7" class="emptyrow">Gagal memuat data: '+escapeHtml(error.message)+'</td></tr>';return;}
+ assetRows=(data||[]).map(mapAsset);renderAssets();
+}
 function renderAssets(){
- const body=document.getElementById("assetRows"); if(!body)return;
- const q=(document.getElementById("assetSearch")?.value||"").toLowerCase();
- const cat=document.getElementById("assetCategoryFilter")?.value||"";
- const status=document.getElementById("assetStatusFilter")?.value||"";
- const list=demoAssets.filter(a=>(!q||[a.code,a.name,a.location].join(" ").toLowerCase().includes(q))&&(!cat||a.category===cat)&&(!status||a.status===status));
- body.innerHTML=list.length?list.map(a=>`<tr>
-  <td><span class="asset">${escapeHtml(a.code)}</span></td><td>${escapeHtml(a.name)}</td><td>${escapeHtml(a.category)}</td><td>${escapeHtml(a.location)}</td>
-  <td><code>${escapeHtml(a.qrId)}</code></td><td><span class="pill ${a.status==="Active"?"ok":"pending"}">${a.status}</span></td>
-  <td><div class="asset-actions"><button class="smallbtn" onclick="editAsset('${a.id}')">Edit</button><button class="smallbtn" onclick="viewAssetQr('${a.id}')">QR ID</button></div></td>
- </tr>`).join(""):'<tr><td colspan="7" class="emptyrow">Tidak ada aset yang cocok dengan pencarian.</td></tr>';
- document.getElementById("assetTotal").textContent=demoAssets.length;
- document.getElementById("assetActive").textContent=demoAssets.filter(a=>a.status==="Active").length;
- document.getElementById("assetInactive").textContent=demoAssets.filter(a=>a.status==="Inactive").length;
- document.getElementById("assetQrCount").textContent=demoAssets.filter(a=>a.qrId).length;
+ const body=document.getElementById('assetRows');if(!body)return;
+ const q=(document.getElementById('assetSearch')?.value||'').toLowerCase();const cat=document.getElementById('assetCategoryFilter')?.value||'';const status=document.getElementById('assetStatusFilter')?.value||'';
+ const list=assetRows.filter(a=>(!q||[a.code,a.name,a.location,a.brand,a.model].join(' ').toLowerCase().includes(q))&&(!cat||a.category===cat)&&(!status||a.status===status));
+ body.innerHTML=list.length?list.map(a=>`<tr><td><span class="asset">${escapeHtml(a.code)}</span></td><td>${escapeHtml(a.name)}</td><td>${escapeHtml(a.category)}</td><td>${escapeHtml(a.location)}</td><td><code title="UUID permanen">${escapeHtml(a.qrId)}</code></td><td><span class="pill ${a.status==='Active'?'ok':'pending'}">${a.status}</span></td><td><div class="asset-actions"><button class="smallbtn" onclick="editAsset('${a.id}')">Edit</button><button class="smallbtn" onclick="viewAssetQr('${a.id}')">QR ID</button></div></td></tr>`).join(''):'<tr><td colspan="7" class="emptyrow">Belum ada aset atau tidak ada hasil pencarian.</td></tr>';
+ document.getElementById('assetTotal').textContent=assetRows.length;document.getElementById('assetActive').textContent=assetRows.filter(a=>a.status==='Active').length;document.getElementById('assetInactive').textContent=assetRows.filter(a=>a.status==='Inactive').length;document.getElementById('assetQrCount').textContent=assetRows.filter(a=>a.qrId).length;
 }
-function escapeHtml(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 function openAssetModal(){
- document.getElementById("assetForm").reset();document.getElementById("assetEditId").value="";
- document.getElementById("assetModalTitle").textContent="Tambah Aset";
- document.getElementById("qrPreviewText").textContent="Akan dibuat otomatis saat aset disimpan pertama kali.";
- document.getElementById("assetModal").classList.add("open");
+ document.getElementById('assetForm').reset();document.getElementById('assetEditId').value='';document.getElementById('assetModalTitle').textContent='Tambah Aset';document.getElementById('qrPreviewText').textContent='Database akan membuat QR token otomatis saat aset disimpan pertama kali.';document.getElementById('assetModal').classList.add('open');
 }
-function closeAssetModal(){document.getElementById("assetModal").classList.remove("open");}
+function closeAssetModal(){document.getElementById('assetModal').classList.remove('open');}
 function editAsset(id){
- const a=demoAssets.find(x=>x.id===id);if(!a)return;
- document.getElementById("assetEditId").value=a.id;document.getElementById("assetCode").value=a.code;
- document.getElementById("assetName").value=a.name;document.getElementById("assetCategory").value=a.category;
- document.getElementById("assetLocation").value=a.location;document.getElementById("assetStatus").value=a.status;
- document.getElementById("assetDescription").value=a.description||"";
- document.getElementById("assetModalTitle").textContent="Edit Aset";
- document.getElementById("qrPreviewText").textContent=a.qrId+" (tetap)";
- document.getElementById("assetModal").classList.add("open");
+ const a=assetRows.find(x=>x.id===id);if(!a)return;
+ document.getElementById('assetEditId').value=a.id;document.getElementById('assetCode').value=a.code;document.getElementById('assetName').value=a.name;document.getElementById('assetCategory').value=a.category;document.getElementById('assetLocation').value=a.location;document.getElementById('assetStatus').value=a.status;document.getElementById('assetBrand').value=a.brand;document.getElementById('assetModel').value=a.model;document.getElementById('assetSerial').value=a.serial;document.getElementById('assetDescription').value=a.description;
+ document.getElementById('assetModalTitle').textContent='Edit Aset';document.getElementById('qrPreviewText').textContent=a.qrId+' (tetap, tidak diubah saat edit)';document.getElementById('assetModal').classList.add('open');
 }
-function saveAsset(e){
- e.preventDefault();
- const editId=document.getElementById("assetEditId").value;
- const code=document.getElementById("assetCode").value.trim().toUpperCase();
- if(demoAssets.some(a=>a.code.toUpperCase()===code&&a.id!==editId)){alert("Kode aset sudah digunakan. Gunakan kode yang berbeda.");return;}
- const values={code,name:document.getElementById("assetName").value.trim(),category:document.getElementById("assetCategory").value,location:document.getElementById("assetLocation").value.trim(),status:document.getElementById("assetStatus").value,description:document.getElementById("assetDescription").value.trim()};
- if(editId){const i=demoAssets.findIndex(a=>a.id===editId);if(i>=0)demoAssets[i]={...demoAssets[i],...values};}
- else{
-  const stableId="asset-"+Date.now()+"-"+Math.random().toString(36).slice(2,7);
-  const qrId="QR-ELD-"+code.replace(/[^A-Z0-9]/g,"");
-  demoAssets.unshift({id:stableId,...values,qrId});
- }
- persistDemoAssets();renderAssets();closeAssetModal();
+async function saveAsset(e){
+ e.preventDefault();if(!currentOrgId||!currentUser)return;
+ const editId=document.getElementById('assetEditId').value;const code=document.getElementById('assetCode').value.trim().toUpperCase();
+ const values={organization_id:currentOrgId,asset_code:code,asset_name:document.getElementById('assetName').value.trim(),asset_type:document.getElementById('assetCategory').value,location:document.getElementById('assetLocation').value.trim(),brand:document.getElementById('assetBrand').value.trim()||null,model:document.getElementById('assetModel').value.trim()||null,serial_number:document.getElementById('assetSerial').value.trim()||null,is_active:document.getElementById('assetStatus').value==='Active',notes:document.getElementById('assetDescription').value.trim()||null};
+ const submit=e.submitter; if(submit){submit.disabled=true;submit.textContent='Menyimpan...';}
+ let result;
+ if(editId){const {organization_id,...updateValues}=values;result=await supabaseClient.from('elodie_inspection_assets').update(updateValues).eq('id',editId).eq('organization_id',currentOrgId).select('id').single();}
+ else{result=await supabaseClient.from('elodie_inspection_assets').insert({...values,created_by:currentUser.id}).select('id').single();}
+ if(submit){submit.disabled=false;submit.textContent='Simpan Aset';}
+ if(result.error){alert('Gagal menyimpan aset: '+result.error.message);return;}
+ await loadAssets();closeAssetModal();
 }
-function viewAssetQr(id){const a=demoAssets.find(x=>x.id===id);if(a)alert("QR ID permanen: "+a.qrId+"\\n\\nIni masih identitas demo, belum berupa QR Code yang dapat dipindai.");}
-const oldShowView=showView;
-showView=function(name){oldShowView(name);if(name==="assets"&&demoAssets.length===0)loadDemoAssets();};
-loadDemoAssets();
+function viewAssetQr(id){const a=assetRows.find(x=>x.id===id);if(a)alert('QR token permanen: '+a.qrId+'\n\nToken ini adalah identitas aset. QR Code gambar/cetak akan dibuat pada modul QR Code Management.');}
+function showView(name){
+ document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));const target=document.getElementById('view-'+name);if(target)target.classList.add('active');
+ document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('active',b.dataset.view===name));const active=document.querySelector('#nav button.active');document.getElementById('crumb').textContent=active?active.innerText.trim():'Overview';if(name==='assets')loadAssets();
+}
 
 </script>
 </body>
