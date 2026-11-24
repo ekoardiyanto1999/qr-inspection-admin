@@ -1,796 +1,320 @@
-<!doctype html>
-<html lang="id">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>QR Inspection System | Admin Dashboard</title>
-<style>
-:root{--navy:#10243a;--navy2:#183650;--blue:#2563eb;--green:#16a36a;--bg:#f3f6fa;--card:#fff;--text:#182536;--muted:#718096;--line:#e5ebf2;--red:#dc5454;--amber:#d68b19;--shadow:0 5px 22px rgba(16,36,58,.06)}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);font:14px/1.45 Inter,Segoe UI,Arial,sans-serif;color:var(--text)}
-button{font:inherit;cursor:pointer}.app{min-height:100vh;display:flex}.sidebar{width:252px;background:var(--navy);color:#d8e4ef;display:flex;flex-direction:column;position:fixed;inset:0 auto 0 0;padding:22px 15px;z-index:5}
-.brand{display:flex;align-items:center;gap:11px;padding:2px 9px 25px;border-bottom:1px solid #294158}.brandmark{width:38px;height:38px;border-radius:11px;background:linear-gradient(145deg,#2f80ed,#18a66a);display:grid;place-items:center;color:white;font-weight:800;font-size:17px}.brand strong{display:block;color:#fff;font-size:15px;letter-spacing:.2px}.brand small{color:#91a7bb;font-size:11px}
-.org{margin:18px 4px 17px;padding:11px 12px;background:#1b3852;border:1px solid #29465f;border-radius:10px}.org small{display:block;color:#91a7bb;font-size:10px;text-transform:uppercase;letter-spacing:1px}.org b{display:block;margin-top:4px;color:white;font-size:13px}
-.navlabel{font-size:10px;color:#7892a9;text-transform:uppercase;letter-spacing:1.2px;padding:13px 11px 7px}.nav{display:grid;gap:4px}.nav button{border:0;background:transparent;color:#b9c9d7;text-align:left;padding:10px 11px;border-radius:8px;display:flex;align-items:center;gap:12px;font-size:13px}.nav button:hover{background:#1b3852;color:white}.nav button.active{background:#244968;color:white;box-shadow:inset 3px 0 #36b77c}.ico{width:18px;text-align:center;font-size:15px}.sidebottom{margin-top:auto;border-top:1px solid #294158;padding:15px 8px 0;color:#8da4b8;font-size:11px}
-.main{margin-left:252px;width:calc(100% - 252px);min-width:0}.topbar{height:70px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 32px;position:sticky;top:0;z-index:3}.crumb{color:var(--muted);font-size:12px}.crumb b{color:var(--text);font-size:13px}.topright{display:flex;align-items:center;gap:18px}.status{display:flex;align-items:center;gap:7px;color:#38845e;font-size:11px;background:#effaf4;border:1px solid #d9f0e2;padding:6px 10px;border-radius:20px}.dot{width:7px;height:7px;background:#21a66a;border-radius:50%}.avatar{width:34px;height:34px;border-radius:50%;background:#e4edf8;color:#244968;display:grid;place-items:center;font-weight:700}
-.content{padding:29px 32px 40px;max-width:1500px;margin:auto}.pagehead{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;margin-bottom:24px}.eyebrow{font-size:10px;letter-spacing:1.4px;color:var(--green);font-weight:700;text-transform:uppercase}.pagehead h1{font-size:25px;margin:5px 0 5px;letter-spacing:-.5px}.pagehead p{margin:0;color:var(--muted);font-size:13px}.actions{display:flex;gap:9px}.btn{border:1px solid var(--line);background:#fff;color:#33465a;padding:9px 13px;border-radius:8px;font-weight:600;font-size:12px}.btn.primary{background:var(--blue);border-color:var(--blue);color:#fff}.btn:hover{filter:brightness(.97)}
-.grid{display:grid;gap:16px}.stats{grid-template-columns:repeat(4,minmax(0,1fr));margin-bottom:18px}.card{background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow)}.stat{padding:17px 18px}.stathead{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:12px}.staticon{width:32px;height:32px;border-radius:9px;background:#edf4ff;color:#326bd0;display:grid;place-items:center;font-size:16px}.statvalue{font-size:27px;font-weight:750;letter-spacing:-.8px;margin:11px 0 2px}.statfoot{font-size:11px;color:var(--muted)}.up{color:var(--green);font-weight:700}
-.cols{grid-template-columns:minmax(0,1.55fr) minmax(270px,1fr);margin-bottom:17px}.panel{padding:19px 20px}.panelhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:17px}.panelhead h3{font-size:14px;margin:0}.sub{font-size:11px;color:var(--muted);margin-top:3px}.link{border:0;background:none;color:var(--blue);font-size:11px;font-weight:650}
-.chart{height:190px;display:flex;align-items:end;gap:13px;padding:12px 6px 0;border-bottom:1px solid var(--line);background:repeating-linear-gradient(to bottom,transparent 0,transparent 46px,#edf1f6 47px)}.barwrap{height:100%;flex:1;display:flex;align-items:end;gap:4px;position:relative}.bar{width:50%;border-radius:5px 5px 0 0;background:#2d72d9;min-height:4px}.bar.alt{background:#a9c8f4}.months{display:flex;justify-content:space-around;color:#8996a5;font-size:10px;padding:8px 0 0}
-.donutrow{display:flex;align-items:center;gap:22px;padding:12px 4px}.donut{width:126px;height:126px;border-radius:50%;background:conic-gradient(#16a36a 0 68%,#e4a43b 68% 86%,#d95b5b 86% 100%);position:relative;flex:none}.donut:after{content:"";position:absolute;inset:17px;background:#fff;border-radius:50%}.donutcenter{position:absolute;inset:0;z-index:1;display:grid;place-content:center;text-align:center}.donutcenter b{font-size:22px}.donutcenter small{font-size:10px;color:var(--muted)}.legend{display:grid;gap:12px;flex:1}.legendrow{display:flex;justify-content:space-between;gap:10px;font-size:11px;color:#596a7c}.legendleft{display:flex;align-items:center;gap:7px}.swatch{width:8px;height:8px;border-radius:3px}
-.bottom{grid-template-columns:minmax(0,1.55fr) minmax(270px,1fr)}table{width:100%;border-collapse:collapse;text-align:left}th{font-size:10px;text-transform:uppercase;letter-spacing:.7px;color:#8794a3;font-weight:650;padding:10px 8px;border-bottom:1px solid var(--line)}td{padding:13px 8px;border-bottom:1px solid #eef2f6;font-size:11px;color:#405164}tr:last-child td{border-bottom:0}.asset{font-weight:700;color:#23374c;font-size:12px}.muted{color:var(--muted)}.pill{display:inline-block;border-radius:20px;padding:4px 8px;font-size:10px;font-weight:700}.ok{background:#e9f8ef;color:#198653}.pending{background:#fff5df;color:#a66a0d}.ng{background:#ffeded;color:#c34747}.activity{display:grid;gap:15px}.activityitem{display:flex;gap:11px;align-items:flex-start}.activityicon{width:28px;height:28px;border-radius:8px;background:#edf4ff;display:grid;place-items:center;color:#316dcf;flex:none}.activityitem b{font-size:11px;display:block}.activityitem small{font-size:10px;color:var(--muted)}
-.view{display:none}.view.active{display:block}.placeholder{padding:48px 25px;text-align:center}.placeholder .bigico{font-size:34px}.placeholder h2{font-size:18px;margin:10px 0 6px}.placeholder p{color:var(--muted);max-width:480px;margin:0 auto 16px;font-size:12px}
-.notice{padding:10px 13px;border:1px solid #f1dfb9;background:#fff9eb;color:#8a651e;border-radius:9px;font-size:11px;margin-bottom:16px}
-@media(max-width:1050px){.stats{grid-template-columns:repeat(2,1fr)}.cols,.bottom{grid-template-columns:1fr}}
-@media(max-width:700px){.sidebar{width:64px;padding:15px 8px}.brand{padding:0 4px 18px}.brand>div:last-child,.org,.navlabel,.nav button span:not(.ico),.sidebottom{display:none}.nav button{justify-content:center;padding:12px 5px}.main{margin-left:64px;width:calc(100% - 64px)}.topbar{padding:0 15px}.content{padding:22px 14px}.pagehead{display:block}.actions{margin-top:14px}.stats{gap:9px}.stat{padding:13px}.statvalue{font-size:23px}.topright{gap:8px}.status{display:none}.panel{padding:15px;overflow:auto}.cols,.bottom{grid-template-columns:minmax(0,1fr)}}
 
-.asset-toolbar{display:flex;gap:10px;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap}
-.searchbox{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);border-radius:8px;padding:0 11px;min-width:230px}
-.searchbox input{border:0;outline:0;padding:10px 0;width:100%;font:inherit;font-size:12px}
-.filterselect{border:1px solid var(--line);background:#fff;padding:10px;border-radius:8px;color:#405164;font:inherit;font-size:12px}
-.asset-table-wrap{overflow:auto}
-.asset-actions{display:flex;gap:6px}
-.smallbtn{border:1px solid var(--line);background:#fff;border-radius:6px;padding:5px 8px;font-size:11px;color:#405164}
-.modalback{position:fixed;inset:0;background:#10243a88;display:none;align-items:center;justify-content:center;padding:18px;z-index:20}
-.modalback.open{display:flex}
-.modal{background:#fff;width:min(620px,100%);max-height:90vh;overflow:auto;border-radius:14px;padding:22px;box-shadow:0 20px 70px #10243a44}
-.modalhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:17px}
-.modalhead h2{font-size:18px;margin:0}
-.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:13px}
-.field{display:grid;gap:5px}.field.full{grid-column:1/-1}.field label{font-size:11px;color:#596a7c;font-weight:650}
-.field input,.field select,.field textarea{width:100%;border:1px solid var(--line);border-radius:8px;padding:10px;font:inherit;font-size:12px;background:#fff}
-.field textarea{min-height:70px;resize:vertical}
-.modalfoot{display:flex;justify-content:flex-end;gap:8px;margin-top:18px}
-.qr-preview{display:flex;align-items:center;gap:13px;background:#f5f8fc;border:1px dashed #b9c9da;border-radius:9px;padding:12px;margin-top:12px}
-.qr-symbol{width:62px;height:62px;background:white;border:5px solid #183650;display:grid;place-items:center;font-size:10px;font-weight:800;letter-spacing:-1px}
-.emptyrow{text-align:center;padding:26px;color:var(--muted)}
-.qr-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(245px,1fr));gap:14px}.qr-card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px;display:flex;gap:13px;align-items:center}.qr-image{width:112px;height:112px;display:grid;place-items:center;background:#fff;border:1px solid var(--line);border-radius:8px;flex:none}.qr-image canvas,.qr-image img{width:100px!important;height:100px!important}.qr-meta{min-width:0}.qr-meta b{display:block;font-size:13px}.qr-meta small{display:block;color:var(--muted);font-size:10px;margin:4px 0;overflow-wrap:anywhere}.qr-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}.qr-detail-back{position:fixed;inset:0;background:#10243a99;display:none;align-items:center;justify-content:center;padding:18px;z-index:30}.qr-detail-back.open{display:flex}.qr-detail{background:white;border-radius:14px;padding:22px;width:min(390px,100%);text-align:center}.qr-detail canvas,.qr-detail img{margin:12px auto;display:block}.qr-detail h3{margin:0}.qr-detail p{font-size:11px;color:var(--muted);overflow-wrap:anywhere}
-@media(max-width:650px){.formgrid{grid-template-columns:1fr}.field.full{grid-column:auto}.asset-toolbar{align-items:stretch}.searchbox{width:100%}}
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+};
 
-.authscreen{min-height:100vh;display:grid;place-items:center;background:linear-gradient(135deg,#10243a,#1c4664);padding:20px}
-.authcard{width:min(420px,100%);background:#fff;border-radius:16px;padding:30px;box-shadow:0 25px 80px #07182766}
-.authbrand{display:flex;align-items:center;gap:12px;margin-bottom:22px}.authbrand .brandmark{width:44px;height:44px}.authcard h1{font-size:22px;margin:0 0 6px}.authcard p{font-size:12px;color:var(--muted);margin:0 0 20px}.authcard .field{margin:12px 0}.authcard .btn{width:100%;padding:12px}.authmessage{font-size:12px;margin-top:12px;color:#b54747;min-height:18px}.authhint{font-size:10px;color:#8291a0;margin-top:15px}.app{display:none}.app.ready{display:flex}
+const json = (status: number, body: Record<string, unknown>) =>
+  new Response(JSON.stringify(body), {
+    status,
+    headers: { ...corsHeaders, "Content-Type": "application/json" },
+  });
 
-
-.finding-toolbar{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
-.finding-toolbar input,.finding-toolbar select{border:1px solid var(--line);background:#fff;border-radius:8px;padding:9px 10px;font:inherit;font-size:12px}
-.finding-list{display:grid;gap:13px}
-.finding-card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px}
-.finding-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap}
-.finding-head b{font-size:13px;color:#23374c}
-.finding-desc{font-size:12px;color:#405164;margin:9px 0}
-.finding-meta{display:flex;gap:14px;flex-wrap:wrap;color:var(--muted);font-size:10px}
-.finding-photos{display:grid;grid-template-columns:repeat(2,minmax(0,220px));gap:12px;margin-top:13px}
-.finding-photo{font-size:10px;color:var(--muted)}
-.finding-photo img{display:block;width:100%;height:145px;object-fit:cover;border:1px solid var(--line);border-radius:8px;margin-top:5px;background:#f3f6fa}
-.finding-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px}
-.finding-actions button{border:1px solid var(--line);background:#fff;border-radius:7px;padding:8px 11px;font:inherit;font-size:11px;font-weight:650}
-.finding-actions .approve{background:#16865a;color:white;border-color:#16865a}
-.finding-actions .reject{color:#b54747;border-color:#e8caca}
-.finding-empty{padding:28px;text-align:center;color:var(--muted);font-size:12px}
-.finding-manage{margin-top:13px;padding:13px;background:#f7f9fc;border:1px solid var(--line);border-radius:9px}
-.finding-manage h4{margin:0 0 9px;font-size:12px}
-.finding-manage-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
-.finding-manage-grid label{display:grid;gap:4px;font-size:10px;color:var(--muted);font-weight:650}
-.finding-manage-grid input,.finding-manage-grid select,.finding-manage-grid textarea{width:100%;min-width:0;border:1px solid var(--line);border-radius:7px;padding:8px;font:inherit;font-size:11px;background:white;color:var(--text)}
-.finding-manage-grid .wide{grid-column:span 2}
-@media(max-width:800px){.finding-manage-grid{grid-template-columns:1fr 1fr}.finding-manage-grid .wide{grid-column:1/-1}}
-@media(max-width:650px){.finding-photos{grid-template-columns:1fr 1fr}.finding-photo img{height:110px}}
-
-
-#view-monitoring .finding-toolbar input,#view-monitoring .finding-toolbar select{border:1px solid var(--line);background:#fff;border-radius:8px;padding:9px 10px;font:inherit;font-size:12px;color:#405164}
-#view-monitoring .finding-toolbar label{display:flex;align-items:center;gap:6px}
-.mon-detail-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:8px 0 17px}
-.mon-detail-cell{background:#f5f8fc;border:1px solid var(--line);border-radius:9px;padding:11px}
-.mon-detail-cell small{display:block;color:var(--muted);font-size:10px;margin-bottom:4px}.mon-detail-cell b{font-size:12px;overflow-wrap:anywhere}
-.mon-response-table{margin-top:12px}.mon-response-table td,.mon-response-table th{padding:10px 8px}
-.mon-notes{white-space:pre-wrap;background:#f8fafc;border:1px solid var(--line);border-radius:8px;padding:12px;font-size:11px;color:#405164}
-@media(max-width:650px){.mon-detail-grid{grid-template-columns:1fr 1fr}}
-
-
-.tpl-item-row{display:grid;grid-template-columns:110px minmax(160px,1.5fr) minmax(130px,1fr) 90px 42px;gap:8px;align-items:center;margin:8px 0}.tpl-item-row input{min-width:0;padding:10px}.tpl-items-head{display:grid;grid-template-columns:110px minmax(160px,1.5fr) minmax(130px,1fr) 90px 42px;gap:8px;color:#718096;font-size:10px;font-weight:800;text-transform:uppercase;padding:0 2px}.tpl-items-box{border:1px solid var(--line);border-radius:11px;padding:12px;margin-top:8px}.tpl-toggle{display:flex;align-items:center;gap:7px;font-size:12px;color:#526274}.tpl-toggle input{width:auto}.tpl-actions{display:flex;gap:6px;flex-wrap:wrap}.tpl-modal{width:min(900px,100%)}
-@media(max-width:700px){.tpl-item-row,.tpl-items-head{grid-template-columns:1fr 1fr}.tpl-item-row .tpl-item-code{grid-column:1}.tpl-item-row .tpl-item-text{grid-column:2}.tpl-item-row .tpl-item-guidance{grid-column:1/-1}.tpl-item-row .tpl-item-required{grid-column:1}.tpl-item-row button{grid-column:2}}
-
-.report-bars{display:grid;gap:13px;padding:8px 0}.report-bar-row{display:grid;grid-template-columns:45px 1fr 55px;gap:10px;align-items:center;font-size:11px}.report-track{height:13px;background:#edf1f6;border-radius:20px;overflow:hidden}.report-fill{height:100%;border-radius:20px}.report-status-list{display:grid;gap:10px}.report-status-row{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid #eef2f6;font-size:11px}.report-status-row:last-child{border-bottom:0}.report-status-row b{font-size:12px}.report-toolbar label{display:flex;align-items:center;gap:6px}
-@media print{.sidebar,.topbar,.actions,.finding-toolbar button,.finding-toolbar select,.finding-toolbar input{display:none!important}.main{margin:0!important;width:100%!important}.content{padding:0!important}.view{display:none!important}#view-reports{display:block!important}.card{box-shadow:none;break-inside:avoid}.report-toolbar{display:none!important}}
-
-.user-id{font-family:ui-monospace,Consolas,monospace;font-size:10px;color:#718096;overflow-wrap:anywhere;max-width:260px}.user-status{display:inline-block;border-radius:20px;padding:4px 8px;font-size:10px;font-weight:700}.user-status.active{background:#e9f8ef;color:#198653}.user-status.inactive{background:#ffeded;color:#c34747}
-</style>
-</head>
-<body>
-<div class="authscreen" id="authScreen">
- <div class="authcard">
-  <div class="authbrand"><div class="brandmark">QR</div><div><strong>QR Inspection System</strong><div class="sub">ADMIN CONSOLE</div></div></div>
-  <h1>Login Admin</h1><p>Masuk menggunakan akun Supabase Auth yang terdaftar pada organisasi.</p>
-  <form id="loginForm">
-   <div class="field"><label for="loginEmail">Email</label><input id="loginEmail" type="email" required autocomplete="username" placeholder="admin@perusahaan.com"></div>
-   <div class="field"><label for="loginPassword">Password</label><input id="loginPassword" type="password" required autocomplete="current-password" placeholder="Password akun"></div>
-   <button class="btn primary" id="loginButton" type="submit">Masuk</button>
-  </form>
-  <div class="authmessage" id="authMessage"></div>
-  <div class="authhint">Akses dibatasi berdasarkan keanggotaan organisasi dan kebijakan RLS Supabase.</div>
- </div>
-</div>
-<div class="app" id="mainApp">
-<aside class="sidebar">
- <div class="brand"><div class="brandmark">QR</div><div><strong>QR Inspection</strong><small>SYSTEM · ADMIN</small></div></div>
- <div class="org"><small>Current organization</small><b id="orgLabel">Elodie Demo</b></div>
- <div class="navlabel">Workspace</div>
- <nav class="nav" id="nav">
-  <button class="active" data-view="overview"><span class="ico">▦</span><span>Overview</span></button>
-  <button data-view="assets"><span class="ico">▣</span><span>Asset Management</span></button>
-  <button data-view="qr"><span class="ico">▦</span><span>QR Code Management</span></button>
-  <button data-view="checklist"><span class="ico">☷</span><span>Inspection Checklist</span></button>
-  <button data-view="monitoring"><span class="ico">◷</span><span>Inspection Monitoring</span></button>
-  <button data-view="findings"><span class="ico">⚑</span><span>Findings & Actions</span></button>
-  <button data-view="reports"><span class="ico">▤</span><span>Reports</span></button>
-  <div class="navlabel">Administration</div>
-  <button data-view="users"><span class="ico">♙</span><span>User Management</span></button>
-  <button data-view="settings"><span class="ico">⚙</span><span>Settings</span></button>
- </nav>
- <div class="sidebottom">QR Inspection System<br>Admin Console · Live Data</div>
-</aside>
-<main class="main">
- <header class="topbar"><div class="crumb">Workspace&nbsp; / &nbsp;<b id="crumb">Overview</b></div><div class="topright"><div class="status"><span class="dot"></span><span id="connectionStatus">Supabase</span></div><span id="signedInUser" class="muted" style="font-size:11px"></span><button class="btn" onclick="signOutUser()">Keluar</button></div></header>
- <div class="content">
-  <section class="view active" id="view-overview">
-   <div class="pagehead"><div><div class="eyebrow">Industrial inspection platform</div><h1>Overview</h1><p>Ringkasan aktual aktivitas inspeksi dan kondisi aset organisasi.</p></div><div class="actions"><button class="btn" onclick="loadOverview()">↻ Refresh Data</button><button class="btn primary" onclick="showView('assets')">＋ Tambah Aset</button></div></div>
-   <div class="grid stats">
-    <div class="card stat"><div class="stathead">Total Assets <span class="staticon">▣</span></div><div class="statvalue" id="ovTotalAssets">—</div><div class="statfoot">Aset terdaftar</div></div>
-    <div class="card stat"><div class="stathead">Inspections This Month <span class="staticon">☷</span></div><div class="statvalue" id="ovMonthInspections">—</div><div class="statfoot">Inspeksi bulan berjalan</div></div>
-    <div class="card stat"><div class="stathead">Draft Inspections <span class="staticon">◷</span></div><div class="statvalue" id="ovDraftInspections">—</div><div class="statfoot">Inspeksi belum disubmit</div></div>
-    <div class="card stat"><div class="stathead">Open Findings <span class="staticon">⚑</span></div><div class="statvalue" id="ovOpenFindings">—</div><div class="statfoot" id="ovOverdueFindings">Termasuk temuan lewat target</div></div>
-   </div>
-   <div class="grid cols">
-    <div class="card panel"><div class="panelhead"><div><h3>Inspection Activity</h3><div class="sub">Jumlah inspeksi per bulan · 6 bulan terakhir</div></div><button class="link" onclick="showView('monitoring')">Lihat monitoring →</button></div><div class="chart" id="ovActivityChart"><div class="finding-empty">Memuat data...</div></div><div class="months" id="ovActivityMonths"></div></div>
-    <div class="card panel"><div class="panelhead"><div><h3>Inspection Results</h3><div class="sub">Distribusi jawaban checklist</div></div></div><div class="donutrow"><div class="donut" id="ovResultDonut" style="background:conic-gradient(#e5ebf2 0 100%)"><div class="donutcenter"><b id="ovResultTotal">0</b><small>Responses</small></div></div><div class="legend"><div class="legendrow"><span class="legendleft"><i class="swatch" style="background:#16a36a"></i>OK</span><b id="ovOkCount">0</b></div><div class="legendrow"><span class="legendleft"><i class="swatch" style="background:#e4a43b"></i>NG</span><b id="ovNgCount">0</b></div><div class="legendrow"><span class="legendleft"><i class="swatch" style="background:#8b9bad"></i>NA</span><b id="ovNaCount">0</b></div></div></div></div>
-   </div>
-   <div class="grid bottom">
-    <div class="card panel"><div class="panelhead"><div><h3>Recent Inspections</h3><div class="sub">Lima inspeksi terbaru</div></div><button class="link" onclick="showView('monitoring')">Lihat semua →</button></div><div class="asset-table-wrap"><table><thead><tr><th>Nomor</th><th>Aset</th><th>Inspector</th><th>Tanggal</th><th>Status</th><th>Hasil</th></tr></thead><tbody id="ovRecentInspections"><tr><td colspan="6" class="emptyrow">Memuat data...</td></tr></tbody></table></div></div>
-    <div class="card panel"><div class="panelhead"><div><h3>Latest Findings</h3><div class="sub">Temuan terbaru dan status tindak lanjut</div></div><button class="link" onclick="showView('findings')">Lihat semua →</button></div><div class="activity" id="ovLatestFindings"><div class="finding-empty">Memuat data...</div></div></div>
-   </div>
-   <div class="notice" style="margin-top:16px">Seluruh ringkasan diambil dari data Supabase pada organisasi yang sedang login. Jadwal inspeksi belum dihitung karena tabel jadwal belum tersedia pada skema saat ini.</div>
-  </section>
-  <section class="view" id="view-assets">
-   <div class="pagehead"><div><div class="eyebrow">Master data</div><h1>Asset Management</h1><p>Kelola identitas, kategori, lokasi, dan status aset organisasi.</p></div><button class="btn primary" onclick="openAssetModal()">＋ Tambah Aset</button></div>
-   <div class="grid stats">
-    <div class="card stat"><div class="stathead">Total Assets <span class="staticon">▣</span></div><div class="statvalue" id="assetTotal">3</div><div class="statfoot">Aset terdaftar dalam demo ini</div></div>
-    <div class="card stat"><div class="stathead">Active Assets <span class="staticon">✓</span></div><div class="statvalue" id="assetActive">3</div><div class="statfoot">Siap digunakan dalam inspeksi</div></div>
-    <div class="card stat"><div class="stathead">Inactive Assets <span class="staticon">◷</span></div><div class="statvalue" id="assetInactive">0</div><div class="statfoot">Tidak aktif</div></div>
-    <div class="card stat"><div class="stathead">QR Assigned <span class="staticon">▦</span></div><div class="statvalue" id="assetQrCount">3</div><div class="statfoot">Identitas QR permanen</div></div>
-   </div>
-   <div class="card panel">
-    <div class="asset-toolbar">
-     <div class="searchbox"><span>⌕</span><input id="assetSearch" placeholder="Cari kode aset, nama, atau lokasi..." oninput="renderAssets()"></div>
-     <div style="display:flex;gap:8px;flex-wrap:wrap"><select id="assetCategoryFilter" class="filterselect" onchange="renderAssets()"><option value="">Semua kategori</option><option>Fire Safety</option><option>Electrical</option><option>Machine</option><option>Utility</option><option>Other</option></select><select id="assetStatusFilter" class="filterselect" onchange="renderAssets()"><option value="">Semua status</option><option>Active</option><option>Inactive</option></select></div>
-    </div>
-    <div class="panelhead"><div><h3>Daftar Aset</h3><div class="sub">Data aset tersimpan di Supabase</div></div><span class="pill ok">Live database</span></div>
-    <div class="asset-table-wrap"><table><thead><tr><th>Kode Aset</th><th>Nama Aset</th><th>Kategori</th><th>Lokasi</th><th>QR ID</th><th>Status</th><th>Aksi</th></tr></thead><tbody id="assetRows"></tbody></table></div>
-    <div class="notice" style="margin-top:15px">Data ditampilkan berdasarkan organisasi dari akun yang sedang login. QR token dibuat satu kali oleh database dan tidak diubah saat aset diedit.</div>
-   </div>
-  </section>
-  <section class="view" id="view-qr"><div class="pagehead"><div><div class="eyebrow">Asset identification</div><h1>QR Code Management</h1><p>QR Code dibuat dari token permanen setiap aset. Token tidak berubah saat aset diedit.</p></div><button class="btn" onclick="loadAssets().then(renderQrCards)">↻ Refresh</button></div><div class="card panel" style="margin-bottom:15px"><div class="panelhead"><div><h3>QR Code Aset</h3><div class="sub">Pilih QR untuk melihat, mengunduh PNG, atau mencetak label.</div></div><span class="pill ok">Permanent identity</span></div><div id="qrCards" class="qr-grid"><div class="emptyrow">Memuat QR Code...</div></div></div><div class="notice">QR saat ini menyimpan UUID permanen (qr_token) sebagai identitas aset. Pemindaian akan menghasilkan token tersebut; halaman inspeksi mobile yang akan menggunakan token ini akan dibuat pada tahap Mobile Inspector.</div></section>
-  <section class="view" id="view-checklist">
-   <div class="pagehead"><div><div class="eyebrow">Inspection standards</div><h1>Inspection Checklist</h1><p>Kelola template dan item pemeriksaan berdasarkan jenis aset.</p></div><div class="actions"><button class="btn" onclick="loadChecklistTemplates()">↻ Refresh</button><button class="btn primary" onclick="openTemplateEditor()">＋ Buat Template</button></div></div>
-   <div class="grid stats"><div class="card stat"><div class="stathead">Total Template <span class="staticon">☷</span></div><div class="statvalue" id="tplTotal">—</div><div class="statfoot">Template organisasi</div></div><div class="card stat"><div class="stathead">Template Aktif <span class="staticon">✓</span></div><div class="statvalue" id="tplActive">—</div><div class="statfoot">Tersedia untuk inspeksi</div></div><div class="card stat"><div class="stathead">Jenis Aset <span class="staticon">▣</span></div><div class="statvalue" id="tplAssetTypes">—</div><div class="statfoot">Kategori yang memiliki template</div></div><div class="card stat"><div class="stathead">Total Item <span class="staticon">≡</span></div><div class="statvalue" id="tplItems">—</div><div class="statfoot">Item pada template aktif</div></div></div>
-   <div class="card panel"><div class="asset-toolbar"><div class="searchbox"><span>⌕</span><input id="tplSearch" placeholder="Cari nama template atau jenis aset..." oninput="renderChecklistTemplates()"></div><select id="tplStatusFilter" class="filterselect" onchange="renderChecklistTemplates()"><option value="">Semua status</option><option value="true">Aktif</option><option value="false">Nonaktif</option></select></div><div class="panelhead"><div><h3>Daftar Template Checklist</h3><div class="sub">Template dan item tersimpan di Supabase</div></div><span class="pill ok">Live database</span></div><div class="asset-table-wrap"><table><thead><tr><th>Nama Template</th><th>Jenis Aset</th><th>Versi</th><th>Jumlah Item</th><th>Status</th><th>Dibuat</th><th>Aksi</th></tr></thead><tbody id="templateRows"><tr><td colspan="7" class="emptyrow">Memuat template...</td></tr></tbody></table></div><div class="notice" style="margin-top:15px">Mengedit template yang sudah pernah dipakai akan membuat versi baru. Versi lama dipertahankan agar riwayat inspeksi terdahulu tidak berubah.</div></div>
-  </section>
-  <section class="view" id="view-monitoring">
-   <div class="pagehead"><div><div class="eyebrow">Operational control</div><h1>Inspection Monitoring</h1><p>Pantau riwayat inspeksi, status pekerjaan, petugas, aset, dan hasil checklist.</p></div><button class="btn" onclick="loadMonitoring()">↻ Refresh Data</button></div>
-   <div class="grid stats">
-    <div class="card stat"><div class="stathead">Total Inspections <span class="staticon">☷</span></div><div class="statvalue" id="monTotal">—</div><div class="statfoot">Sesuai filter aktif</div></div>
-    <div class="card stat"><div class="stathead">Submitted <span class="staticon">✓</span></div><div class="statvalue" id="monSubmitted">—</div><div class="statfoot">Inspeksi terkirim</div></div>
-    <div class="card stat"><div class="stathead">Draft <span class="staticon">◷</span></div><div class="statvalue" id="monDraft">—</div><div class="statfoot">Belum disubmit</div></div>
-    <div class="card stat"><div class="stathead">NG Responses <span class="staticon">⚑</span></div><div class="statvalue" id="monNg">—</div><div class="statfoot">Jawaban checklist NG</div></div>
-   </div>
-   <div class="card panel">
-    <div class="finding-toolbar">
-     <input id="monSearch" placeholder="Cari nomor inspeksi, aset, atau inspector..." oninput="renderMonitoring()">
-     <select id="monStatus" onchange="renderMonitoring()"><option value="">Semua status</option><option value="draft">Draft</option><option value="submitted">Submitted</option><option value="reviewed">Reviewed</option></select>
-     <label class="muted" style="font-size:11px">Dari <input id="monDateFrom" type="date" onchange="renderMonitoring()"></label>
-     <label class="muted" style="font-size:11px">Sampai <input id="monDateTo" type="date" onchange="renderMonitoring()"></label>
-     <button class="smallbtn" onclick="resetMonitoringFilters()">Reset Filter</button>
-    </div>
-    <div class="panelhead"><div><h3>Riwayat Inspeksi</h3><div class="sub">Data langsung dari Supabase · klik Detail untuk melihat jawaban checklist</div></div><span class="pill ok" id="monLiveLabel">Live database</span></div>
-    <div class="asset-table-wrap"><table><thead><tr><th>Nomor Inspeksi</th><th>Aset</th><th>Inspector</th><th>Tanggal</th><th>Status</th><th>OK</th><th>NG</th><th>NA</th><th>Aksi</th></tr></thead><tbody id="monRows"><tr><td colspan="9" class="emptyrow">Memuat data inspeksi...</td></tr></tbody></table></div>
-    <div class="notice" style="margin-top:14px;margin-bottom:0">Filter tanggal menggunakan tanggal inspeksi. Data jadwal yang belum terlaksana tidak ditampilkan karena modul jadwal belum tersedia pada database saat ini.</div>
-   </div>
-   <div class="modalback" id="inspectionDetailBack" onclick="if(event.target===this)closeInspectionDetail()"><div class="modal" style="width:min(820px,100%)"><div class="modalhead"><div><div class="eyebrow">Inspection record</div><h2 id="inspectionDetailTitle">Detail Inspeksi</h2></div><button class="smallbtn" onclick="closeInspectionDetail()">✕ Tutup</button></div><div id="inspectionDetailBody"><div class="finding-empty">Memuat detail...</div></div></div></div>
-  </section>
-  <section class="view" id="view-findings">
-    <div class="pagehead"><div><div class="eyebrow">Corrective action</div><h1>Findings & Corrective Actions</h1><p>Kelola penugasan temuan, pantau proses perbaikan, lalu verifikasi bukti BEFORE dan AFTER.</p></div><button class="btn" onclick="loadFindings()">↻ Refresh</button></div>
-    <div class="grid stats">
-     <div class="card stat"><div class="stathead">Open <span class="staticon">⚑</span></div><div class="statvalue" id="findingOpenCount">0</div><div class="statfoot">Menunggu tindak lanjut</div></div>
-     <div class="card stat"><div class="stathead">In Progress <span class="staticon">◷</span></div><div class="statvalue" id="findingProgressCount">0</div><div class="statfoot">Sedang diperbaiki</div></div>
-     <div class="card stat"><div class="stathead">Completed <span class="staticon">✓</span></div><div class="statvalue" id="findingCompletedCount">0</div><div class="statfoot">Menunggu verifikasi Supervisor</div></div>
-     <div class="card stat"><div class="stathead">Verified <span class="staticon">✔</span></div><div class="statvalue" id="findingVerifiedCount">0</div><div class="statfoot">Perbaikan disetujui</div></div>
-    </div>
-    <div class="notice">Alur: Open = temuan baru; Inspector memulai perbaikan dari Mobile Inspector sehingga status menjadi In Progress; setelah foto AFTER dan laporan dikirim, status menjadi Completed untuk verifikasi Supervisor/Admin.</div>
-    <div class="card panel">
-     <div class="finding-toolbar">
-      <input id="findingSearch" placeholder="Cari nomor temuan atau deskripsi..." oninput="renderFindings()">
-      <select id="findingStatusFilter" onchange="renderFindings()"><option value="">Semua status</option><option value="open">Open</option><option value="in_progress">In Progress</option><option value="completed">Completed</option><option value="verified">Verified</option></select>
-      <select id="findingRiskFilter" onchange="renderFindings()"><option value="">Semua tingkat risiko</option><option value="low">Low</option><option value="medium">Medium</option><option value="high">High</option><option value="critical">Critical</option></select>
-     </div>
-     <div class="panelhead"><div><h3>Daftar Temuan</h3><div class="sub">Foto bukti tersimpan pada private Supabase Storage</div></div><span class="pill ok" id="findingAccessLabel">Supervisor Review</span></div>
-     <div id="findingList" class="finding-list"><div class="finding-empty">Memuat temuan...</div></div>
-    </div>
-   </section>
-  <section class="view" id="view-reports">
-   <div class="pagehead"><div><div class="eyebrow">Performance & records</div><h1>Reports & Analytics</h1><p>Analisis inspeksi, hasil checklist, dan tindak lanjut temuan berdasarkan data organisasi.</p></div><div class="actions"><button class="btn" onclick="exportReportsCsv()">↓ Export Excel (CSV)</button><button class="btn primary" onclick="printReports()">Cetak / PDF</button></div></div>
-   <div class="card panel" style="margin-bottom:16px"><div class="finding-toolbar">
-    <label>Mulai <input id="reportFrom" type="date" onchange="renderReports()"></label>
-    <label>Sampai <input id="reportTo" type="date" onchange="renderReports()"></label>
-    <select id="reportAsset" onchange="renderReports()"><option value="">Semua aset</option></select>
-    <select id="reportInspector" onchange="renderReports()"><option value="">Semua Inspector</option></select>
-    <select id="reportStatus" onchange="renderReports()"><option value="">Semua status</option><option value="draft">Draft</option><option value="submitted">Submitted</option><option value="reviewed">Reviewed</option></select>
-    <button class="btn" onclick="resetReportFilters()">Reset Filter</button><button class="btn" onclick="loadReports()">↻ Refresh</button>
-   </div><div class="sub">Filter menggunakan tanggal inspeksi. Laporan dihitung dari inspeksi dan respons checklist yang tersimpan.</div></div>
-   <div class="grid stats">
-    <div class="card stat"><div class="stathead">Total Inspeksi</div><div class="statvalue" id="repTotalInspections">—</div><div class="statfoot">Sesuai filter aktif</div></div>
-    <div class="card stat"><div class="stathead">Jawaban OK</div><div class="statvalue" id="repOk">—</div><div class="statfoot" id="repOkPct">—</div></div>
-    <div class="card stat"><div class="stathead">Jawaban NG</div><div class="statvalue" id="repNg">—</div><div class="statfoot" id="repNgPct">—</div></div>
-    <div class="card stat"><div class="stathead">Temuan Verified</div><div class="statvalue" id="repVerified">—</div><div class="statfoot" id="repFindingTotal">—</div></div>
-   </div>
-   <div class="grid cols" style="margin-bottom:16px">
-    <div class="card panel"><div class="panelhead"><div><h3>Distribusi Hasil Checklist</h3><div class="sub">Komposisi jawaban OK, NG, dan NA</div></div></div><div id="repResultBars" class="report-bars"><div class="finding-empty">Memuat data...</div></div></div>
-    <div class="card panel"><div class="panelhead"><div><h3>Status Temuan</h3><div class="sub">Temuan yang terkait dengan inspeksi terfilter</div></div></div><div id="repFindingStatus" class="report-status-list"></div></div>
-   </div>
-   <div class="grid bottom" style="margin-bottom:16px">
-    <div class="card panel"><div class="panelhead"><div><h3>Ringkasan per Aset</h3><div class="sub">Jumlah inspeksi dan jawaban NG</div></div></div><div class="asset-table-wrap"><table><thead><tr><th>Aset</th><th>Inspeksi</th><th>OK</th><th>NG</th><th>NA</th></tr></thead><tbody id="repAssetRows"><tr><td colspan="5" class="emptyrow">Memuat...</td></tr></tbody></table></div></div>
-    <div class="card panel"><div class="panelhead"><div><h3>Temuan berdasarkan Risiko</h3><div class="sub">Distribusi tingkat risiko</div></div></div><div id="repRiskRows" class="report-status-list"></div></div>
-   </div>
-   <div class="card panel"><div class="panelhead"><div><h3>Detail Riwayat Inspeksi</h3><div class="sub">Data sesuai periode dan filter yang dipilih</div></div><span class="pill ok" id="reportLiveLabel">Live database</span></div><div class="asset-table-wrap"><table><thead><tr><th>Nomor Inspeksi</th><th>Aset</th><th>Inspector</th><th>Tanggal</th><th>Status</th><th>OK</th><th>NG</th><th>NA</th></tr></thead><tbody id="repInspectionRows"><tr><td colspan="8" class="emptyrow">Memuat laporan...</td></tr></tbody></table></div><div class="notice" style="margin:14px 0 0">Catatan: Export Excel menghasilkan CSV yang dapat dibuka di Microsoft Excel. Pilihan Cetak / PDF menggunakan dialog cetak browser. Data jadwal inspeksi yang belum terlaksana tidak termasuk karena modul jadwal belum tersedia.</div></div>
-  </section>
-  <section class="view" id="view-users">
-   <div class="pagehead"><div><div class="eyebrow">Access control</div><h1>User Management</h1><p>Kelola anggota organisasi dan hak akses mereka melalui Supabase Auth.</p></div><div class="actions"><button class="btn" onclick="loadUsers()">↻ Refresh</button><button class="btn primary" onclick="openUserModal()">＋ Tambah User</button></div></div>
-   <div class="grid stats"><div class="card stat"><div class="stathead">Total Anggota <span class="staticon">♙</span></div><div class="statvalue" id="userTotal">—</div><div class="statfoot">Anggota organisasi aktif dan nonaktif</div></div><div class="card stat"><div class="stathead">Admin <span class="staticon">★</span></div><div class="statvalue" id="userAdminCount">—</div><div class="statfoot">Hak akses administrator</div></div><div class="card stat"><div class="stathead">Supervisor <span class="staticon">✓</span></div><div class="statvalue" id="userSupervisorCount">—</div><div class="statfoot">Pengawas inspeksi</div></div><div class="card stat"><div class="stathead">Inspector <span class="staticon">▣</span></div><div class="statvalue" id="userInspectorCount">—</div><div class="statfoot">Petugas inspeksi</div></div></div>
-   <div class="card panel"><div class="asset-toolbar"><div class="searchbox"><span>⌕</span><input id="userSearch" placeholder="Cari nama, role, atau User ID..." oninput="renderUsers()"></div><select id="userRoleFilter" class="filterselect" onchange="renderUsers()"><option value="">Semua role</option><option value="admin">Admin</option><option value="supervisor">Supervisor</option><option value="inspector">Inspector</option></select></div><div class="panelhead"><div><h3>Anggota Organisasi</h3><div class="sub">Daftar membership organisasi aktif yang tersimpan di Supabase</div></div><span class="pill ok">Live database</span></div><div class="asset-table-wrap"><table><thead><tr><th>Nama</th><th>Role</th><th>Status</th><th>User ID</th></tr></thead><tbody id="userRows"><tr><td colspan="4" class="emptyrow">Memuat anggota...</td></tr></tbody></table></div><div class="notice" style="margin-top:14px;margin-bottom:0">Email akun belum ditampilkan karena tabel membership saat ini tidak menyimpan kolom email. Pembuatan akun dan undangan dilakukan melalui Edge Function di server; service_role tidak digunakan di browser.</div></div>
-  </section>
-  <section class="view" id="view-settings"><div class="pagehead"><div><div class="eyebrow">Configuration</div><h1>Settings</h1><p>Pengaturan organisasi dan preferensi aplikasi.</p></div></div><div class="card placeholder"><div class="bigico">⚙</div><h2>Organization Settings</h2><p>Pengaturan profil organisasi, bahasa, zona waktu, dan preferensi sistem akan tersedia di sini.</p><span class="pill pending">Kerangka UI · Menunggu integrasi</span></div></section>
- </div>
-
-<div class="modalback" id="userModal" role="dialog" aria-modal="true" aria-labelledby="userModalTitle" onclick="if(event.target===this)closeUserModal()">
- <div class="modal"><div class="modalhead"><div><div class="eyebrow">Organization access</div><h2 id="userModalTitle">Tambah User</h2></div><button class="smallbtn" type="button" onclick="closeUserModal()">✕ Tutup</button></div>
-  <form id="userForm" onsubmit="submitUser(event)"><div class="field full"><label>Metode penambahan</label><select id="userMethod" onchange="toggleUserMethod()"><option value="create_manual">Tambah Manual oleh Admin</option><option value="invite_email">Undang melalui Email</option></select></div>
-   <div class="formgrid" style="margin-top:13px"><div class="field full"><label for="newUserName">Nama Lengkap *</label><input id="newUserName" required maxlength="120" placeholder="Nama pengguna"></div><div class="field full"><label for="newUserEmail">Email *</label><input id="newUserEmail" type="email" required maxlength="254" placeholder="nama@perusahaan.com"></div><div class="field full"><label for="newUserRole">Role *</label><select id="newUserRole" required><option value="inspector">Inspector</option><option value="supervisor">Supervisor</option><option value="admin">Admin</option></select></div><div class="field full" id="initialPasswordField"><label for="newUserPassword">Password Awal * (minimal 12 karakter)</label><input id="newUserPassword" type="password" minlength="12" autocomplete="new-password" placeholder="Tentukan password awal"></div></div>
-   <div class="notice" id="userMethodNote" style="margin-top:13px">Akun dibuat langsung. Inspector dan Supervisor wajib mengganti password saat login pertama.</div><div id="userFormMessage" class="authmessage" aria-live="polite"></div><div class="modalfoot"><button type="button" class="btn" onclick="closeUserModal()">Batal</button><button type="submit" class="btn primary" id="saveUserBtn">Buat Akun</button></div>
-  </form>
- </div>
-</div>
-<div class="modalback" id="assetModal" role="dialog" aria-modal="true" aria-labelledby="assetModalTitle">
- <div class="modal">
-  <div class="modalhead"><h2 id="assetModalTitle">Tambah Aset</h2><button class="smallbtn" onclick="closeAssetModal()">✕ Tutup</button></div>
-  <form id="assetForm" onsubmit="saveAsset(event)">
-   <input type="hidden" id="assetEditId">
-   <div class="formgrid">
-    <div class="field"><label for="assetCode">Kode Aset *</label><input id="assetCode" required placeholder="Contoh: APAR-001"></div>
-    <div class="field"><label for="assetName">Nama Aset *</label><input id="assetName" required placeholder="Contoh: APAR Powder 6 kg"></div>
-    <div class="field"><label for="assetCategory">Kategori *</label><select id="assetCategory" required><option value="">Pilih kategori</option><option>Fire Safety</option><option>Electrical</option><option>Machine</option><option>Utility</option><option>Other</option></select></div>
-    <div class="field"><label for="assetLocation">Lokasi *</label><input id="assetLocation" required placeholder="Contoh: Produksi Line 1"></div>
-    <div class="field"><label for="assetBrand">Brand</label><input id="assetBrand" placeholder="Contoh: Yamato"></div>
-    <div class="field"><label for="assetModel">Model</label><input id="assetModel" placeholder="Model aset"></div>
-    <div class="field"><label for="assetSerial">Serial Number</label><input id="assetSerial" placeholder="Nomor seri"></div>
-    <div class="field"><label for="assetStatus">Status</label><select id="assetStatus"><option>Active</option><option>Inactive</option></select></div>
-    <div class="field full"><label for="assetDescription">Keterangan</label><textarea id="assetDescription" placeholder="Informasi tambahan aset (opsional)"></textarea></div>
-   </div>
-   <div class="qr-preview"><div class="qr-symbol">QR<br>PREVIEW</div><div><b>QR ID permanen</b><div class="sub" id="qrPreviewText">Akan dibuat otomatis saat aset disimpan pertama kali.</div><div class="sub">Mengedit aset tidak akan mengganti QR ID.</div></div></div>
-   <div class="modalfoot"><button type="button" class="btn" onclick="closeAssetModal()">Batal</button><button type="submit" class="btn primary">Simpan Aset</button></div>
-  </form>
- </div>
-</div>
-
-
-<div class="modalback" id="templateDetailModal" role="dialog" aria-modal="true" aria-labelledby="templateDetailTitle"><div class="modal tpl-modal"><div class="modalhead"><div><div class="eyebrow">Checklist template</div><h2 id="templateDetailTitle">Detail Template</h2><div class="sub" id="templateDetailMeta"></div></div><button class="smallbtn" onclick="closeTemplateDetail()">✕ Tutup</button></div><div class="table-wrap"><table><thead><tr><th>No.</th><th>Kode</th><th>Item Pemeriksaan</th><th>Panduan</th><th>Wajib</th></tr></thead><tbody id="templateDetailRows"><tr><td colspan="5" class="emptyrow">Memuat item...</td></tr></tbody></table></div><div class="modalfoot"><button class="btn" onclick="closeTemplateDetail()">Tutup</button><button class="btn primary" id="templateDetailVersionBtn">Buat Versi Baru</button></div></div></div>
-
-<div class="modalback" id="templateModal" role="dialog" aria-modal="true" aria-labelledby="templateModalTitle"><div class="modal tpl-modal"><div class="modalhead"><div><div class="eyebrow">Template editor</div><h2 id="templateModalTitle">Buat Template Checklist</h2></div><button class="smallbtn" onclick="closeTemplateEditor()">✕ Tutup</button></div><form id="templateForm" onsubmit="saveTemplate(event)"><input type="hidden" id="templateSourceId"><div class="formgrid"><div class="field"><label for="templateName">Nama Template *</label><input id="templateName" required placeholder="Contoh: Checklist Inspeksi APAR"></div><div class="field"><label for="templateAssetType">Jenis Aset *</label><select id="templateAssetType" required><option value="">Pilih jenis aset</option><option>Fire Safety</option><option>Electrical</option><option>Machine</option><option>Utility</option><option>Other</option></select></div><div class="field full"><label for="templateDescription">Deskripsi</label><textarea id="templateDescription" placeholder="Tujuan atau ruang lingkup pemeriksaan"></textarea></div></div><div class="row" style="justify-content:space-between;margin:15px 0 8px"><div><b>Item Pemeriksaan</b><div class="sub">Atur kode, nama item, panduan, dan kewajiban jawaban.</div></div><button type="button" class="smallbtn" onclick="addTemplateItemRow()">＋ Tambah Item</button></div><div class="tpl-items-box"><div class="tpl-items-head"><span>Kode</span><span>Item Pemeriksaan *</span><span>Panduan</span><span>Wajib</span><span></span></div><div id="templateItemRows"></div></div><div id="templateFormMessage" class="message"></div><div class="modalfoot"><button type="button" class="btn" onclick="closeTemplateEditor()">Batal</button><button type="submit" class="btn primary" id="saveTemplateBtn">Simpan Template</button></div></form></div></div>
-</main>
-</div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-<script>
-// Project URL dan Publishable Key Supabase untuk frontend. Jangan pernah gunakan service_role/secret key di sini.
-const SUPABASE_URL = "https://kilrmcgjgipjnrxateyh.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY = "sb_publishable__32xG6J6OsOl1UxEjpphhg_Jw0xo_mN";
-const ORGANIZATION_FALLBACK_NAME = "Elodie Demo";
-const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
-let currentUser = null, currentOrgId = null, currentMember = null, assetRows = [];
-
-function showView(name){
- document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
- const target=document.getElementById('view-'+name); if(target) target.classList.add('active');
- document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('active',b.dataset.view===name));
- const active=document.querySelector('#nav button.active'); document.getElementById('crumb').textContent=active?active.innerText.trim():'Overview';
-}
-document.querySelectorAll('#nav button').forEach(b=>b.addEventListener('click',()=>showView(b.dataset.view)));
-
-function setAuthMessage(message, good=false){const el=document.getElementById('authMessage');el.textContent=message||'';el.style.color=good?'#198653':'#b54747';}
-async function signInUser(e){
- e.preventDefault();const btn=document.getElementById('loginButton');btn.disabled=true;btn.textContent='Memeriksa akun...';setAuthMessage('');
- const email=document.getElementById('loginEmail').value.trim(),password=document.getElementById('loginPassword').value;
- const {data,error}=await supabaseClient.auth.signInWithPassword({email,password});
- btn.disabled=false;btn.textContent='Masuk';
- if(error){setAuthMessage('Login gagal: '+error.message);return;}
- await initializeSession(data.user);
-}
-async function initializeSession(user){
- currentUser=user;
- const {data:members,error}=await supabaseClient.from('elodie_inspection_members').select('organization_id,full_name,role,is_active').eq('user_id',user.id).eq('is_active',true);
- if(error){setAuthMessage('Gagal membaca keanggotaan: '+error.message);await supabaseClient.auth.signOut();return;}
- if(!members||members.length===0){setAuthMessage('Akun berhasil login, tetapi belum terdaftar sebagai anggota organisasi QR Inspection.');await supabaseClient.auth.signOut();return;}
- // Sementara pilih organisasi pertama yang aktif; pemilih multi-organisasi dibuat pada tahap berikutnya.
- currentMember=members[0];currentOrgId=currentMember.organization_id;
- document.getElementById('orgLabel').textContent=ORGANIZATION_FALLBACK_NAME;
- document.getElementById('signedInUser').textContent=(currentMember.full_name||user.email)+' · '+currentMember.role;
- document.getElementById('authScreen').style.display='none';document.getElementById('mainApp').classList.add('ready');
- document.getElementById('connectionStatus').textContent='Supabase terhubung';
- const canManage=['admin','supervisor'].includes(currentMember.role);
- document.querySelector('#view-assets .pagehead .btn.primary').style.display=canManage?'':'none';
- await loadAssets();
-}
-async function signOutUser(){await supabaseClient.auth.signOut();currentUser=null;currentOrgId=null;currentMember=null;document.getElementById('mainApp').classList.remove('ready');document.getElementById('authScreen').style.display='grid';}
-document.getElementById('loginForm').addEventListener('submit',signInUser);
-supabaseClient.auth.getSession().then(async({data})=>{if(data.session)await initializeSession(data.session.user);});
-supabaseClient.auth.onAuthStateChange(async(event,session)=>{if(event==='SIGNED_OUT'){document.getElementById('mainApp').classList.remove('ready');document.getElementById('authScreen').style.display='grid';}});
-
-function escapeHtml(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
-function mapAsset(row){return {id:row.id,code:row.asset_code,name:row.asset_name,category:row.asset_type,location:row.location,brand:row.brand||'',model:row.model||'',serial:row.serial_number||'',status:row.is_active?'Active':'Inactive',description:row.notes||'',qrId:row.qr_token};}
-async function loadAssets(){
- if(!currentOrgId)return;const body=document.getElementById('assetRows');body.innerHTML='<tr><td colspan="7" class="emptyrow">Memuat data aset...</td></tr>';
- const {data,error}=await supabaseClient.from('elodie_inspection_assets').select('id,organization_id,asset_code,asset_name,asset_type,location,brand,model,serial_number,qr_token,notes,is_active,created_at').eq('organization_id',currentOrgId).order('created_at',{ascending:false});
- if(error){body.innerHTML='<tr><td colspan="7" class="emptyrow">Gagal memuat data: '+escapeHtml(error.message)+'</td></tr>';return;}
- assetRows=(data||[]).map(mapAsset);renderAssets();
-}
-function renderAssets(){
- const body=document.getElementById('assetRows');if(!body)return;
- const q=(document.getElementById('assetSearch')?.value||'').toLowerCase();const cat=document.getElementById('assetCategoryFilter')?.value||'';const status=document.getElementById('assetStatusFilter')?.value||'';
- const list=assetRows.filter(a=>(!q||[a.code,a.name,a.location,a.brand,a.model].join(' ').toLowerCase().includes(q))&&(!cat||a.category===cat)&&(!status||a.status===status));
- body.innerHTML=list.length?list.map(a=>`<tr><td><span class="asset">${escapeHtml(a.code)}</span></td><td>${escapeHtml(a.name)}</td><td>${escapeHtml(a.category)}</td><td>${escapeHtml(a.location)}</td><td><code title="UUID permanen">${escapeHtml(a.qrId)}</code></td><td><span class="pill ${a.status==='Active'?'ok':'pending'}">${a.status}</span></td><td><div class="asset-actions"><button class="smallbtn" onclick="editAsset('${a.id}')">Edit</button><button class="smallbtn" onclick="viewAssetQr('${a.id}')">QR ID</button></div></td></tr>`).join(''):'<tr><td colspan="7" class="emptyrow">Belum ada aset atau tidak ada hasil pencarian.</td></tr>';
- document.getElementById('assetTotal').textContent=assetRows.length;document.getElementById('assetActive').textContent=assetRows.filter(a=>a.status==='Active').length;document.getElementById('assetInactive').textContent=assetRows.filter(a=>a.status==='Inactive').length;document.getElementById('assetQrCount').textContent=assetRows.filter(a=>a.qrId).length;
-}
-function openAssetModal(){
- document.getElementById('assetForm').reset();document.getElementById('assetEditId').value='';document.getElementById('assetModalTitle').textContent='Tambah Aset';document.getElementById('qrPreviewText').textContent='Database akan membuat QR token otomatis saat aset disimpan pertama kali.';document.getElementById('assetModal').classList.add('open');
-}
-function closeAssetModal(){document.getElementById('assetModal').classList.remove('open');}
-function editAsset(id){
- const a=assetRows.find(x=>x.id===id);if(!a)return;
- document.getElementById('assetEditId').value=a.id;document.getElementById('assetCode').value=a.code;document.getElementById('assetName').value=a.name;document.getElementById('assetCategory').value=a.category;document.getElementById('assetLocation').value=a.location;document.getElementById('assetStatus').value=a.status;document.getElementById('assetBrand').value=a.brand;document.getElementById('assetModel').value=a.model;document.getElementById('assetSerial').value=a.serial;document.getElementById('assetDescription').value=a.description;
- document.getElementById('assetModalTitle').textContent='Edit Aset';document.getElementById('qrPreviewText').textContent=a.qrId+' (tetap, tidak diubah saat edit)';document.getElementById('assetModal').classList.add('open');
-}
-async function saveAsset(e){
- e.preventDefault();if(!currentOrgId||!currentUser)return;
- const editId=document.getElementById('assetEditId').value;const code=document.getElementById('assetCode').value.trim().toUpperCase();
- const values={organization_id:currentOrgId,asset_code:code,asset_name:document.getElementById('assetName').value.trim(),asset_type:document.getElementById('assetCategory').value,location:document.getElementById('assetLocation').value.trim(),brand:document.getElementById('assetBrand').value.trim()||null,model:document.getElementById('assetModel').value.trim()||null,serial_number:document.getElementById('assetSerial').value.trim()||null,is_active:document.getElementById('assetStatus').value==='Active',notes:document.getElementById('assetDescription').value.trim()||null};
- const submit=e.submitter; if(submit){submit.disabled=true;submit.textContent='Menyimpan...';}
- let result;
- if(editId){const {organization_id,...updateValues}=values;result=await supabaseClient.from('elodie_inspection_assets').update(updateValues).eq('id',editId).eq('organization_id',currentOrgId).select('id').single();}
- else{result=await supabaseClient.from('elodie_inspection_assets').insert({...values,created_by:currentUser.id}).select('id').single();}
- if(submit){submit.disabled=false;submit.textContent='Simpan Aset';}
- if(result.error){alert('Gagal menyimpan aset: '+result.error.message);return;}
- await loadAssets();closeAssetModal();
-}
-function viewAssetQr(id){const a=assetRows.find(x=>x.id===id);if(!a)return;showView('qr');renderQrCards();setTimeout(()=>openQrDetail(id),80);}
-function renderQrCards(){
- const root=document.getElementById('qrCards');if(!root)return;
- if(!assetRows.length){root.innerHTML='<div class="emptyrow">Belum ada aset pada organisasi ini.</div>';return;}
- root.innerHTML=assetRows.map(a=>`<div class="qr-card"><div class="qr-image" id="qr-thumb-${a.id}"></div><div class="qr-meta"><b>${escapeHtml(a.code)} · ${escapeHtml(a.name)}</b><small>${escapeHtml(a.location)}</small><small>Token: ${escapeHtml(a.qrId)}</small><div class="qr-actions"><button class="smallbtn" onclick="openQrDetail('${a.id}')">Lihat QR</button><button class="smallbtn" onclick="downloadQr('${a.id}')">Unduh PNG</button></div></div></div>`).join('');
- if(!window.QRCode){root.insertAdjacentHTML('afterbegin','<div class="notice" style="grid-column:1/-1">Library QR tidak berhasil dimuat. Periksa koneksi internet lalu refresh.</div>');return;}
- assetRows.forEach(a=>{const el=document.getElementById('qr-thumb-'+a.id);if(el){el.innerHTML='';new QRCode(el,{text:a.qrId,width:100,height:100,colorDark:'#10243a',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.H});}});
-}
-function makeQrNode(container,token,size=220){container.innerHTML='';if(!window.QRCode){container.textContent='Library QR belum termuat.';return;}new QRCode(container,{text:token,width:size,height:size,colorDark:'#10243a',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.H});}
-function openQrDetail(id){const a=assetRows.find(x=>x.id===id);if(!a)return;let back=document.getElementById('qrDetailBack');if(!back){back=document.createElement('div');back.id='qrDetailBack';back.className='qr-detail-back';back.innerHTML='<div class="qr-detail"><div style="display:flex;justify-content:flex-end"><button class="smallbtn" onclick="closeQrDetail()">✕ Tutup</button></div><h3 id="qrDetailName"></h3><p id="qrDetailCode"></p><div id="qrDetailImage"></div><p id="qrDetailToken"></p><div class="qr-actions" style="justify-content:center"><button class="btn primary" id="qrDownloadBtn">Unduh PNG</button><button class="btn" onclick="printQrLabel()">Cetak Label</button></div></div>';document.body.appendChild(back);}back.classList.add('open');document.getElementById('qrDetailName').textContent=a.name;document.getElementById('qrDetailCode').textContent=a.code+' · '+a.location;document.getElementById('qrDetailToken').textContent='QR Token: '+a.qrId;makeQrNode(document.getElementById('qrDetailImage'),a.qrId,220);document.getElementById('qrDownloadBtn').onclick=()=>downloadQr(id);}
-function closeQrDetail(){const el=document.getElementById('qrDetailBack');if(el)el.classList.remove('open');}
-function getQrDataUrl(id){const a=assetRows.find(x=>x.id===id);if(!a)return null;const holder=document.createElement('div');holder.style.position='fixed';holder.style.left='-9999px';document.body.appendChild(holder);makeQrNode(holder,a.qrId,400);const canvas=holder.querySelector('canvas');const img=holder.querySelector('img');let url=canvas?canvas.toDataURL('image/png'):img?img.src:null;holder.remove();return url;}
-function downloadQr(id){const a=assetRows.find(x=>x.id===id);if(!a)return;const url=getQrDataUrl(id);if(!url){alert('QR belum siap. Pastikan library QR termuat.');return;}const link=document.createElement('a');link.href=url;link.download='QR-'+a.code+'.png';document.body.appendChild(link);link.click();link.remove();}
-function printQrLabel(){const a=assetRows.find(x=>document.getElementById('qrDetailToken')?.textContent.includes(x.qrId));if(!a)return;const url=getQrDataUrl(a.id);if(!url)return;const w=window.open('','_blank','width=500,height=600');if(!w){alert('Izinkan pop-up untuk mencetak label.');return;}w.document.write('<html><head><title>Label QR '+escapeHtml(a.code)+'</title><style>body{font-family:Arial;text-align:center;padding:25px}img{width:220px;height:220px}.label{border:1px solid #bbb;padding:20px;display:inline-block}</style></head><body><div class="label"><h2>'+escapeHtml(a.code)+'</h2><b>'+escapeHtml(a.name)+'</b><br><img src="'+url+'"><p>'+escapeHtml(a.location)+'</p><small>QR Inspection System</small></div><script>window.onload=()=>window.print()<\/script></body></html>');w.document.close();}
-function showView(name){
- document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));const target=document.getElementById('view-'+name);if(target)target.classList.add('active');
- document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('active',b.dataset.view===name));const active=document.querySelector('#nav button.active');document.getElementById('crumb').textContent=active?active.innerText.trim():'Overview';if(name==='assets')loadAssets();if(name==='checklist')loadChecklistTemplates();if(name==='qr'){loadAssets().then(renderQrCards);}if(name==='findings')loadFindings();if(name==='monitoring')loadMonitoring();if(name==='overview')loadOverview();if(name==='reports')loadReports();if(name==='users')loadUsers();
-}
-
-
-
-// CHECKLIST TEMPLATE MANAGEMENT
-let checklistTemplates=[], checklistItemCounts={};
-async function loadChecklistTemplates(){
- if(!currentOrgId)return;
- const body=document.getElementById('templateRows');if(body)body.innerHTML='<tr><td colspan="7" class="emptyrow">Memuat template...</td></tr>';
- const {data,error}=await supabaseClient.from('elodie_inspection_templates').select('id,template_name,asset_type,description,version,is_active,created_at').eq('organization_id',currentOrgId).order('asset_type').order('template_name').order('version',{ascending:false});
- if(error){if(body)body.innerHTML=`<tr><td colspan="7" class="emptyrow">Gagal memuat template: ${escapeHtml(error.message)}</td></tr>`;return;}
- checklistTemplates=data||[];checklistItemCounts={};
- if(checklistTemplates.length){const ids=checklistTemplates.map(x=>x.id);const {data:items,error:itemErr}=await supabaseClient.from('elodie_inspection_template_items').select('template_id').eq('organization_id',currentOrgId).in('template_id',ids);if(itemErr){if(body)body.innerHTML=`<tr><td colspan="7" class="emptyrow">Template terbaca, tetapi jumlah item gagal dimuat: ${escapeHtml(itemErr.message)}</td></tr>`;return;} (items||[]).forEach(x=>checklistItemCounts[x.template_id]=(checklistItemCounts[x.template_id]||0)+1);}
- renderChecklistTemplates();
-}
-function renderChecklistTemplates(){
- const body=document.getElementById('templateRows');if(!body)return;
- const q=(document.getElementById('tplSearch')?.value||'').toLowerCase(),st=document.getElementById('tplStatusFilter')?.value||'';
- const rows=checklistTemplates.filter(t=>(!q||(t.template_name+' '+t.asset_type).toLowerCase().includes(q))&&(!st||String(t.is_active)===st));
- body.innerHTML=rows.length?rows.map(t=>`<tr><td><b>${escapeHtml(t.template_name)}</b><div class="sub">${escapeHtml(t.description||'')}</div></td><td>${escapeHtml(t.asset_type)}</td><td>v${t.version}</td><td>${checklistItemCounts[t.id]||0}</td><td><span class="pill ${t.is_active?'ok':'pending'}">${t.is_active?'AKTIF':'NONAKTIF'}</span></td><td>${formatShortDate(t.created_at)}</td><td><div class="tpl-actions"><button class="smallbtn" onclick="viewChecklistTemplate('${t.id}')">Lihat Item</button><button class="smallbtn" onclick="editChecklistTemplate('${t.id}')">Buat Versi Baru</button><button class="smallbtn" onclick="toggleChecklistTemplate('${t.id}',${!t.is_active})">${t.is_active?'Nonaktifkan':'Aktifkan'}</button></div></td></tr>`).join(''):'<tr><td colspan="7" class="emptyrow">Belum ada template atau tidak ada hasil filter.</td></tr>';
- const active=checklistTemplates.filter(t=>t.is_active);document.getElementById('tplTotal').textContent=checklistTemplates.length;document.getElementById('tplActive').textContent=active.length;document.getElementById('tplAssetTypes').textContent=new Set(active.map(t=>t.asset_type)).size;document.getElementById('tplItems').textContent=active.reduce((n,t)=>n+(checklistItemCounts[t.id]||0),0);
-}
-function openTemplateEditor(){
- if(!['admin','supervisor'].includes(currentMember?.role)){alert('Hanya Admin atau Supervisor yang dapat mengelola template.');return;}
- document.getElementById('templateForm').reset();document.getElementById('templateSourceId').value='';document.getElementById('templateModalTitle').textContent='Buat Template Checklist';document.getElementById('saveTemplateBtn').textContent='Simpan Template';document.getElementById('templateItemRows').innerHTML='';hideTemplateMessage();addTemplateItemRow();document.getElementById('templateModal').classList.add('open');
-}
-function closeTemplateEditor(){document.getElementById('templateModal').classList.remove('open');}
-function addTemplateItemRow(item={}){
- const root=document.getElementById('templateItemRows'),row=document.createElement('div');row.className='tpl-item-row';row.innerHTML=`<input class="tpl-item-code" placeholder="APAR-01" value="${escapeHtml(item.item_code||'')}"><input class="tpl-item-text" placeholder="Nama item pemeriksaan" required value="${escapeHtml(item.item_text||'')}"><input class="tpl-item-guidance" placeholder="Panduan (opsional)" value="${escapeHtml(item.guidance||'')}"><label class="tpl-toggle tpl-item-required"><input type="checkbox" ${item.is_required===false?'':'checked'}> Wajib</label><button type="button" class="smallbtn" title="Hapus item" onclick="this.closest('.tpl-item-row').remove()">✕</button>`;root.appendChild(row);
-}
-async function viewChecklistTemplate(id){
- const t=checklistTemplates.find(x=>x.id===id);if(!t)return;
- const body=document.getElementById('templateDetailRows');body.innerHTML='<tr><td colspan="5" class="emptyrow">Memuat item...</td></tr>';
- document.getElementById('templateDetailTitle').textContent=t.template_name;
- document.getElementById('templateDetailMeta').textContent=`Jenis aset: ${t.asset_type} · Versi: v${t.version} · ${t.is_active?'AKTIF':'NONAKTIF'}`;
- document.getElementById('templateDetailVersionBtn').onclick=()=>{closeTemplateDetail();editChecklistTemplate(id);};
- document.getElementById('templateDetailModal').classList.add('open');
- const {data:items,error}=await supabaseClient.from('elodie_inspection_template_items').select('item_code,item_text,guidance,is_required,sort_order').eq('organization_id',currentOrgId).eq('template_id',id).order('sort_order',{ascending:true});
- if(error){body.innerHTML=`<tr><td colspan="5" class="emptyrow">Gagal memuat item: ${escapeHtml(error.message)}</td></tr>`;return;}
- body.innerHTML=(items||[]).length?(items||[]).map((item,i)=>`<tr><td>${item.sort_order??i+1}</td><td><b>${escapeHtml(item.item_code||'-')}</b></td><td>${escapeHtml(item.item_text||'-')}</td><td>${escapeHtml(item.guidance||'-')}</td><td><span class="pill ${item.is_required?'ok':'pending'}">${item.is_required?'WAJIB':'OPSIONAL'}</span></td></tr>`).join(''):'<tr><td colspan="5" class="emptyrow">Belum ada item pada template ini.</td></tr>';
-}
-function closeTemplateDetail(){document.getElementById('templateDetailModal').classList.remove('open');}
-async function editChecklistTemplate(id){
- const t=checklistTemplates.find(x=>x.id===id);if(!t)return;
- const {data:items,error}=await supabaseClient.from('elodie_inspection_template_items').select('item_code,item_text,guidance,is_required,sort_order').eq('organization_id',currentOrgId).eq('template_id',id).order('sort_order');if(error){alert('Gagal memuat item template: '+error.message);return;}
- document.getElementById('templateForm').reset();document.getElementById('templateSourceId').value=id;document.getElementById('templateName').value=t.template_name;document.getElementById('templateAssetType').value=t.asset_type;document.getElementById('templateDescription').value=t.description||'';document.getElementById('templateModalTitle').textContent=`Buat Versi Baru · ${t.template_name} (v${t.version+1})`;document.getElementById('saveTemplateBtn').textContent='Simpan Versi Baru';document.getElementById('templateItemRows').innerHTML='';(items||[]).forEach(addTemplateItemRow);if(!(items||[]).length)addTemplateItemRow();hideTemplateMessage();document.getElementById('templateModal').classList.add('open');
-}
-function showTemplateMessage(message,type='err'){const el=document.getElementById('templateFormMessage');el.textContent=message;el.className='message show '+type;}
-function hideTemplateMessage(){const el=document.getElementById('templateFormMessage');el.textContent='';el.className='message';}
-async function saveTemplate(e){
- e.preventDefault();if(!currentOrgId||!currentUser)return;
- const name=document.getElementById('templateName').value.trim(),assetType=document.getElementById('templateAssetType').value,description=document.getElementById('templateDescription').value.trim()||null,sourceId=document.getElementById('templateSourceId').value;
- const rows=[...document.querySelectorAll('#templateItemRows .tpl-item-row')].map((r,i)=>({item_code:r.querySelector('.tpl-item-code').value.trim()||`ITEM-${String(i+1).padStart(2,'0')}`,item_text:r.querySelector('.tpl-item-text').value.trim(),guidance:r.querySelector('.tpl-item-guidance').value.trim()||null,is_required:r.querySelector('input[type=checkbox]').checked,sort_order:i+1}));
- if(!rows.length||rows.some(x=>!x.item_text)){showTemplateMessage('Tambahkan minimal satu item dan isi nama setiap item.');return;}
- const codes=rows.map(x=>x.item_code.toLowerCase());if(new Set(codes).size!==codes.length){showTemplateMessage('Kode item tidak boleh duplikat dalam satu template.');return;}
- const btn=document.getElementById('saveTemplateBtn');btn.disabled=true;btn.textContent='Menyimpan...';
- let version=1;if(sourceId){const old=checklistTemplates.find(x=>x.id===sourceId);version=(old?.version||1)+1;}
- const {data:newTemplate,error}=await supabaseClient.from('elodie_inspection_templates').insert({organization_id:currentOrgId,template_name:name,asset_type:assetType,description,version,is_active:true,created_by:currentUser.id}).select('id').single();
- if(error){btn.disabled=false;btn.textContent=sourceId?'Simpan Versi Baru':'Simpan Template';showTemplateMessage('Gagal membuat template: '+error.message);return;}
- const payload=rows.map(x=>({...x,organization_id:currentOrgId,template_id:newTemplate.id}));const {error:itemError}=await supabaseClient.from('elodie_inspection_template_items').insert(payload);
- if(itemError){await supabaseClient.from('elodie_inspection_templates').delete().eq('id',newTemplate.id).eq('organization_id',currentOrgId);btn.disabled=false;btn.textContent=sourceId?'Simpan Versi Baru':'Simpan Template';showTemplateMessage('Template dibuat tetapi item gagal disimpan: '+itemError.message);return;}
- if(sourceId){const {error:deactivateError}=await supabaseClient.from('elodie_inspection_templates').update({is_active:false}).eq('id',sourceId).eq('organization_id',currentOrgId);if(deactivateError){btn.disabled=false;btn.textContent='Simpan Versi Baru';showTemplateMessage('Versi baru tersimpan, tetapi versi sebelumnya gagal dinonaktifkan: '+deactivateError.message);await loadChecklistTemplates();return;}}
- btn.disabled=false;closeTemplateEditor();await loadChecklistTemplates();
-}
-async function toggleChecklistTemplate(id,active){
- const t=checklistTemplates.find(x=>x.id===id);if(!t)return;
- if(active){const other=checklistTemplates.find(x=>x.id!==id&&x.asset_type===t.asset_type&&x.is_active);if(other&&!confirm(`Template aktif untuk jenis aset ${t.asset_type} saat ini adalah “${other.template_name}”. Aktifkan template ini dan nonaktifkan template tersebut?`))return;if(other){const {error:e1}=await supabaseClient.from('elodie_inspection_templates').update({is_active:false}).eq('id',other.id).eq('organization_id',currentOrgId);if(e1){alert('Gagal menonaktifkan template sebelumnya: '+e1.message);return;}}}
- const {error}=await supabaseClient.from('elodie_inspection_templates').update({is_active:active}).eq('id',id).eq('organization_id',currentOrgId);if(error){alert('Gagal mengubah status template: '+error.message);return;}await loadChecklistTemplates();
-}
-
-// OVERVIEW: seluruh angka dan aktivitas dibaca langsung dari tabel organisasi aktif.
-function monthStartISO(offset=0){
- const d=new Date();d.setDate(1);d.setHours(0,0,0,0);d.setMonth(d.getMonth()+offset);return d;
-}
-function formatShortDate(value){
- if(!value)return '-';
- const d=new Date(value);return Number.isNaN(d.getTime())?String(value):d.toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'});
-}
-function statusPill(status){
- const s=String(status||'').toLowerCase();
- const cls=['verified','submitted','completed'].includes(s)?'ok':(['draft','in_progress'].includes(s)?'pending':'ng');
- return `<span class="pill ${cls}">${escapeHtml(s.replaceAll('_',' ').toUpperCase()||'-')}</span>`;
-}
-async function loadOverview(){
- if(!currentOrgId)return;
- const ids=['ovTotalAssets','ovMonthInspections','ovDraftInspections','ovOpenFindings'];
- ids.forEach(id=>{const el=document.getElementById(id);if(el)el.textContent='…';});
- const org=currentOrgId;
- const [assetsQ,inspectionsQ,findingsQ,responsesQ,membersQ]=await Promise.all([
-  supabaseClient.from('elodie_inspection_assets').select('id,asset_code,asset_name,asset_type,is_active').eq('organization_id',org),
-  supabaseClient.from('elodie_inspection_inspections').select('id,inspection_number,asset_id,inspector_id,inspection_date,status,created_at').eq('organization_id',org).order('created_at',{ascending:false}),
-  supabaseClient.from('elodie_inspection_findings').select('id,finding_number,description,status,due_date,created_at').eq('organization_id',org).order('created_at',{ascending:false}),
-  supabaseClient.from('elodie_inspection_responses').select('inspection_id,result').eq('organization_id',org),
-  supabaseClient.from('elodie_inspection_members').select('user_id,full_name,role').eq('organization_id',org)
- ]);
- const failed=[assetsQ,inspectionsQ,findingsQ,responsesQ,membersQ].find(x=>x.error);
- if(failed){ids.forEach(id=>{const el=document.getElementById(id);if(el)el.textContent='!';});document.getElementById('ovRecentInspections').innerHTML=`<tr><td colspan="6" class="emptyrow">Gagal memuat Overview: ${escapeHtml(failed.error.message)}</td></tr>`;return;}
- const assets=assetsQ.data||[], inspections=inspectionsQ.data||[], findings=findingsQ.data||[], responses=responsesQ.data||[], members=membersQ.data||[];
- const assetMap=new Map(assets.map(x=>[x.id,x])), memberMap=new Map(members.map(x=>[x.user_id,x.full_name||x.role||'User']));
- const now=new Date(), thisMonth=monthStartISO(), nextMonth=monthStartISO(1);
- const inMonth=inspections.filter(x=>{const d=new Date(x.inspection_date||x.created_at);return d>=thisMonth&&d<nextMonth;});
- const open=findings.filter(x=>['open','in_progress','completed'].includes(String(x.status||'').toLowerCase()));
- const overdue=open.filter(x=>x.due_date&&new Date(x.due_date+'T23:59:59')<now);
- document.getElementById('ovTotalAssets').textContent=assets.length;
- document.getElementById('ovMonthInspections').textContent=inMonth.length;
- document.getElementById('ovDraftInspections').textContent=inspections.filter(x=>String(x.status).toLowerCase()==='draft').length;
- document.getElementById('ovOpenFindings').textContent=open.length;
- document.getElementById('ovOverdueFindings').textContent=`${overdue.length} temuan melewati target`;
- const counts={ok:0,ng:0,na:0};
- responses.forEach(r=>{const k=String(r.result||'').toLowerCase();if(k in counts)counts[k]++;});
- const total=counts.ok+counts.ng+counts.na;
- document.getElementById('ovResultTotal').textContent=total;
- document.getElementById('ovOkCount').textContent=counts.ok;
- document.getElementById('ovNgCount').textContent=counts.ng;
- document.getElementById('ovNaCount').textContent=counts.na;
- const pct=total?counts.ok/total*100:0, pct2=total?(counts.ok+counts.ng)/total*100:0;
- document.getElementById('ovResultDonut').style.background=total?`conic-gradient(#16a36a 0 ${pct}%,#e4a43b ${pct}% ${pct2}%,#8b9bad ${pct2}% 100%)`:'conic-gradient(#e5ebf2 0 100%)';
- const months=Array.from({length:6},(_,i)=>monthStartISO(i-5));
- const monthCounts=months.map((d,i)=>inspections.filter(x=>{const t=new Date(x.inspection_date||x.created_at);return t>=d&&t<(months[i+1]||nextMonthFor(d));}).length);
- const max=Math.max(1,...monthCounts);
- document.getElementById('ovActivityChart').innerHTML=monthCounts.map(n=>`<div class="barwrap" title="${n} inspeksi"><div class="bar" style="height:${Math.max(3,n/max*92)}%"></div></div>`).join('');
- document.getElementById('ovActivityMonths').innerHTML=months.map(d=>`<span>${d.toLocaleDateString('id-ID',{month:'short'})}</span>`).join('');
- const recent=inspections.slice(0,5);
- document.getElementById('ovRecentInspections').innerHTML=recent.length?recent.map(x=>{
-  const a=assetMap.get(x.asset_id), rs=responses.filter(r=>r.inspection_id===x.id);
-  const result=rs.some(r=>String(r.result).toLowerCase()==='ng')?'NG':rs.length&&rs.every(r=>String(r.result).toLowerCase()==='na')?'NA':rs.length?'OK':'-';
-  return `<tr><td>${escapeHtml(x.inspection_number||'-')}</td><td><span class="asset">${escapeHtml(a?.asset_code||'Aset tidak ditemukan')}</span><br><span class="muted">${escapeHtml(a?.asset_name||'')}</span></td><td>${escapeHtml(memberMap.get(x.inspector_id)||'-')}</td><td>${formatShortDate(x.inspection_date||x.created_at)}</td><td>${statusPill(x.status)}</td><td><span class="pill ${result==='NG'?'ng':result==='OK'?'ok':'pending'}">${result}</span></td></tr>`;
- }).join(''):'<tr><td colspan="6" class="emptyrow">Belum ada inspeksi.</td></tr>';
- document.getElementById('ovLatestFindings').innerHTML=findings.length?findings.slice(0,5).map(f=>`<div class="activityitem"><div class="activityicon">⚑</div><div><b>${escapeHtml(f.finding_number||'Finding')}</b><small>${escapeHtml(f.description||'')} · ${findingStatusLabel(f.status)}</small></div></div>`).join(''):'<div class="finding-empty">Belum ada temuan.</div>';
-}
-function nextMonthFor(d){const n=new Date(d);n.setMonth(n.getMonth()+1);return n;}
-
-let monitoringRows=[];
-let monitoringResponses=[];
-let monitoringAssets=new Map();
-let monitoringMembers=new Map();
-function normalizeInspectionStatus(v){return String(v||'').toLowerCase();}
-function monitoringStatusPill(v){const s=normalizeInspectionStatus(v);const cls=['submitted','reviewed','verified','completed'].includes(s)?'ok':s==='draft'?'pending':'ng';return `<span class="pill ${cls}">${escapeHtml((s||'-').replaceAll('_',' ').toUpperCase())}</span>`;}
-function monitoringResultCounts(id){const rows=monitoringResponses.filter(r=>r.inspection_id===id);const c={ok:0,ng:0,na:0};rows.forEach(r=>{const k=String(r.result||'').toLowerCase();if(k in c)c[k]++;});return c;}
-async function loadMonitoring(){
- if(!currentOrgId)return;
- const body=document.getElementById('monRows');if(body)body.innerHTML='<tr><td colspan="9" class="emptyrow">Memuat data inspeksi...</td></tr>';
- ['monTotal','monSubmitted','monDraft','monNg'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent='…';});
- const org=currentOrgId;
- const [iq,aq,mq,rq]=await Promise.all([
-  supabaseClient.from('elodie_inspection_inspections').select('*').eq('organization_id',org).order('inspection_date',{ascending:false}),
-  supabaseClient.from('elodie_inspection_assets').select('id,asset_code,asset_name,asset_type,location').eq('organization_id',org),
-  supabaseClient.from('elodie_inspection_members').select('user_id,full_name,role').eq('organization_id',org),
-  supabaseClient.from('elodie_inspection_responses').select('id,inspection_id,template_item_id,result,notes').eq('organization_id',org)
- ]);
- const err=[iq,aq,mq,rq].find(x=>x.error);
- if(err){body.innerHTML=`<tr><td colspan="9" class="emptyrow">Gagal memuat data: ${escapeHtml(err.error.message)}</td></tr>`;['monTotal','monSubmitted','monDraft','monNg'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent='!';});return;}
- monitoringRows=iq.data||[];monitoringResponses=rq.data||[];
- monitoringAssets=new Map((aq.data||[]).map(a=>[a.id,a]));
- monitoringMembers=new Map((mq.data||[]).map(m=>[m.user_id,m.full_name||m.role||'User']));
- renderMonitoring();
-}
-function renderMonitoring(){
- const q=(document.getElementById('monSearch')?.value||'').trim().toLowerCase();
- const status=(document.getElementById('monStatus')?.value||'').toLowerCase();
- const from=document.getElementById('monDateFrom')?.value||'',to=document.getElementById('monDateTo')?.value||'';
- const filtered=monitoringRows.filter(x=>{
-  const a=monitoringAssets.get(x.asset_id)||{};const inspector=monitoringMembers.get(x.inspector_id)||'';
-  const hay=[x.inspection_number,a.asset_code,a.asset_name,inspector].join(' ').toLowerCase();
-  const d=String(x.inspection_date||x.created_at||'').slice(0,10);
-  return (!q||hay.includes(q))&&(!status||normalizeInspectionStatus(x.status)===status)&&(!from||d>=from)&&(!to||d<=to);
- });
- const totalResponses=filtered.reduce((n,x)=>n+monitoringResponses.filter(r=>r.inspection_id===x.id).length,0);
- const submitted=filtered.filter(x=>['submitted','reviewed'].includes(normalizeInspectionStatus(x.status))).length;
- const drafts=filtered.filter(x=>normalizeInspectionStatus(x.status)==='draft').length;
- const ng=filtered.reduce((n,x)=>n+monitoringResponses.filter(r=>r.inspection_id===x.id&&String(r.result||'').toLowerCase()==='ng').length,0);
- document.getElementById('monTotal').textContent=filtered.length;
- document.getElementById('monSubmitted').textContent=submitted;
- document.getElementById('monDraft').textContent=drafts;
- document.getElementById('monNg').textContent=ng;
- const body=document.getElementById('monRows');
- body.innerHTML=filtered.length?filtered.map(x=>{
-  const a=monitoringAssets.get(x.asset_id)||{},c=monitoringResultCounts(x.id);
-  return `<tr><td><span class="asset">${escapeHtml(x.inspection_number||'-')}</span></td><td><span class="asset">${escapeHtml(a.asset_code||'Aset tidak ditemukan')}</span><br><span class="muted">${escapeHtml(a.asset_name||'')}</span></td><td>${escapeHtml(monitoringMembers.get(x.inspector_id)||'-')}</td><td>${formatShortDate(x.inspection_date||x.created_at)}</td><td>${monitoringStatusPill(x.status)}</td><td>${c.ok}</td><td><span class="${c.ng?'ng':''}">${c.ng}</span></td><td>${c.na}</td><td><button class="smallbtn" onclick="openInspectionDetail('${x.id}')">Detail</button></td></tr>`;
- }).join(''):'<tr><td colspan="9" class="emptyrow">Tidak ada data inspeksi yang sesuai filter.</td></tr>';
-}
-function resetMonitoringFilters(){['monSearch','monStatus','monDateFrom','monDateTo'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});renderMonitoring();}
-function closeInspectionDetail(){document.getElementById('inspectionDetailBack')?.classList.remove('open');}
-async function openInspectionDetail(id){
- const x=monitoringRows.find(r=>r.id===id);if(!x)return;
- const a=monitoringAssets.get(x.asset_id)||{};const root=document.getElementById('inspectionDetailBody');
- document.getElementById('inspectionDetailTitle').textContent=x.inspection_number||'Detail Inspeksi';
- document.getElementById('inspectionDetailBack').classList.add('open');root.innerHTML='<div class="finding-empty">Memuat detail inspeksi...</div>';
- const [itemsQ,templateQ]=await Promise.all([
-  supabaseClient.from('elodie_inspection_template_items').select('*').eq('template_id',x.template_id),
-  supabaseClient.from('elodie_inspection_templates').select('*').eq('id',x.template_id).maybeSingle()
- ]);
- const rows=monitoringResponses.filter(r=>r.inspection_id===id);
- const items=new Map((itemsQ.data||[]).map(it=>[it.id,it]));
- const count={ok:0,ng:0,na:0};rows.forEach(r=>{const k=String(r.result||'').toLowerCase();if(k in count)count[k]++;});
- const labelFor=it=>it?.item_name||it?.item_text||it?.title||it?.description||it?.name||it?.label||'Item checklist';
- const responseRows=rows.map((r,i)=>{const it=items.get(r.template_item_id);const result=String(r.result||'-').toUpperCase();const cls=result==='OK'?'ok':result==='NG'?'ng':'pending';return `<tr><td>${i+1}</td><td>${escapeHtml(labelFor(it))}</td><td><span class="pill ${cls}">${escapeHtml(result)}</span></td><td>${escapeHtml(r.notes||'-')}</td></tr>`;}).join('');
- root.innerHTML=`<div class="mon-detail-grid"><div class="mon-detail-cell"><small>Aset</small><b>${escapeHtml(a.asset_code||'-')} · ${escapeHtml(a.asset_name||'')}</b></div><div class="mon-detail-cell"><small>Inspector</small><b>${escapeHtml(monitoringMembers.get(x.inspector_id)||'-')}</b></div><div class="mon-detail-cell"><small>Tanggal inspeksi</small><b>${formatShortDate(x.inspection_date||x.created_at)}</b></div><div class="mon-detail-cell"><small>Template</small><b>${escapeHtml(templateQ.data?.template_name||templateQ.data?.name||'Checklist')}</b></div><div class="mon-detail-cell"><small>Status</small><b>${monitoringStatusPill(x.status)}</b></div><div class="mon-detail-cell"><small>Hasil</small><b>OK ${count.ok} · NG ${count.ng} · NA ${count.na}</b></div></div><h3 style="font-size:13px;margin:12px 0 5px">Hasil Checklist</h3><div class="asset-table-wrap"><table class="mon-response-table"><thead><tr><th>No.</th><th>Item Pemeriksaan</th><th>Hasil</th><th>Catatan</th></tr></thead><tbody>${responseRows||'<tr><td colspan="4" class="emptyrow">Belum ada jawaban checklist.</td></tr>'}</tbody></table></div><h3 style="font-size:13px;margin:17px 0 7px">Catatan Umum</h3><div class="mon-notes">${escapeHtml(x.general_notes||'Tidak ada catatan umum.')}</div>`;
- if(itemsQ.error)root.insertAdjacentHTML('beforeend',`<div class="notice" style="margin-top:12px">Nama item checklist belum dapat dimuat: ${escapeHtml(itemsQ.error.message)}. Hasil inspeksi tetap ditampilkan berdasarkan respons tersimpan.</div>`);
-}
-
-let findingRows = [];
-let findingMembers = [];
-let findingMemberMap = new Map();
-function findingStatusLabel(status){
- const labels={open:'Open',in_progress:'In Progress',completed:'Completed',verified:'Verified'};
- return labels[status]||status||'-';
-}
-function findingStatusClass(status){
- return status==='verified'?'ok':status==='completed'?'pending':status==='in_progress'?'pending':'ng';
-}
-async function loadFindings(){
- if(!currentOrgId)return;
- const root=document.getElementById('findingList');
- if(root)root.innerHTML='<div class="finding-empty">Memuat data temuan...</div>';
- const {data,error}=await supabaseClient.from('elodie_inspection_findings')
-  .select('id,organization_id,finding_number,inspection_id,response_id,description,immediate_action,risk_level,corrective_action,assigned_to,due_date,status,before_photo_path,after_photo_path,closing_notes,closed_by,closed_at,rejection_notes,verified_by,verified_at,created_by,created_at')
-  .eq('organization_id',currentOrgId).order('created_at',{ascending:false});
- if(error){if(root)root.innerHTML='<div class="finding-empty">Gagal memuat temuan: '+escapeHtml(error.message)+'</div>';return;}
- const membersQ=await supabaseClient.from('elodie_inspection_members').select('user_id,full_name,role,is_active').eq('organization_id',currentOrgId).eq('is_active',true);
- findingRows=data||[];
- findingMembers=membersQ.data||[];
- findingMemberMap=new Map(findingMembers.map(m=>[m.user_id,m.full_name||m.role||'User']));
- await renderFindings();
-}
-async function signedFindingPhoto(path){
- if(!path)return null;
- const {data,error}=await supabaseClient.storage.from('elodie-inspection-evidence').createSignedUrl(path,1800);
- return error?null:data?.signedUrl||null;
-}
-async function renderFindings(){
- const root=document.getElementById('findingList');if(!root)return;
- const role=currentMember?.role;
- const canVerify=['admin','supervisor'].includes(role);
- const q=(document.getElementById('findingSearch')?.value||'').toLowerCase();
- const status=document.getElementById('findingStatusFilter')?.value||'';
- const risk=document.getElementById('findingRiskFilter')?.value||'';
- document.getElementById('findingOpenCount').textContent=findingRows.filter(x=>x.status==='open').length;
- document.getElementById('findingProgressCount').textContent=findingRows.filter(x=>x.status==='in_progress').length;
- document.getElementById('findingCompletedCount').textContent=findingRows.filter(x=>x.status==='completed').length;
- document.getElementById('findingVerifiedCount').textContent=findingRows.filter(x=>x.status==='verified').length;
- document.getElementById('findingAccessLabel').textContent=canVerify?'Supervisor Review':'Read Only';
- let list=findingRows.filter(x=>(!q||[x.finding_number,x.description,x.corrective_action].join(' ').toLowerCase().includes(q))&&(!status||x.status===status)&&(!risk||x.risk_level===risk));
- if(!list.length){root.innerHTML='<div class="finding-empty">Tidak ada temuan yang sesuai filter.</div>';return;}
- root.innerHTML='<div class="finding-empty">Menyiapkan bukti foto...</div>';
- const cards=await Promise.all(list.map(async f=>{
-  const [beforeUrl,afterUrl]=await Promise.all([signedFindingPhoto(f.before_photo_path),signedFindingPhoto(f.after_photo_path)]);
-  const photos=(label,url,path)=>`<div class="finding-photo">${label}${url?`<a href="${url}" target="_blank" rel="noopener"><img src="${url}" alt="${label}"></a>`:'<div class="finding-empty">Foto belum tersedia / tidak dapat diakses.</div>'}</div>`;
-  let actions='';
-  if(canVerify&&f.status==='completed'){
-   actions=`<div class="finding-actions"><button class="approve" onclick="verifyFinding('${f.id}')">✓ Verifikasi & Setujui</button><button class="reject" onclick="rejectFinding('${f.id}')">↩ Tolak & Kembalikan</button></div>`;
+Deno.serve(async (req) => {
+  if (req.method === "OPTIONS") {
+    return new Response("ok", { headers: corsHeaders });
   }
-  let manage='';
-  if(canVerify&&['open','in_progress'].includes(f.status)){
-   const memberOptions='<option value="">Belum ditentukan</option>'+findingMembers.map(m=>`<option value="${m.user_id}" ${f.assigned_to===m.user_id?'selected':''}>${escapeHtml(m.full_name||m.role||'User')} · ${escapeHtml(m.role||'')}</option>`).join('');
-   manage=`<div class="finding-manage"><h4>Penugasan & Rencana Perbaikan</h4><div class="finding-manage-grid">
-    <label>PIC<select id="pic-${f.id}">${memberOptions}</select></label>
-    <label>Tingkat Risiko<select id="risk-${f.id}"><option value="">Belum ditentukan</option>${['low','medium','high','critical'].map(v=>`<option value="${v}" ${f.risk_level===v?'selected':''}>${v.toUpperCase()}</option>`).join('')}</select></label>
-    <label>Tenggat Perbaikan<input id="due-${f.id}" type="date" value="${escapeHtml(f.due_date||'')}"></label>
-    <label class="wide">Rencana Perbaikan<textarea id="action-${f.id}" rows="2" placeholder="Tuliskan tindakan korektif yang diperlukan">${escapeHtml(f.corrective_action||'')}</textarea></label>
-   </div><div class="finding-actions"><button onclick="saveFindingPlan('${f.id}')">Simpan Penugasan</button><span class="muted" style="font-size:10px;align-self:center">Inspector memulai dan melaporkan perbaikan melalui Mobile Inspector.</span></div></div>`;
+
+  if (req.method !== "POST") {
+    return json(405, { error: "Method not allowed" });
   }
-  const assigned=f.assigned_to?`<div class="finding-desc"><b>PIC:</b> ${escapeHtml(findingMemberMap.get(f.assigned_to)||'Anggota tidak aktif/tidak ditemukan')}</div>`:'';
-  const rejection=f.rejection_notes?`<div class="notice" style="margin-top:10px">Catatan penolakan sebelumnya: ${escapeHtml(f.rejection_notes)}</div>`:'';
-  return `<article class="finding-card">
-   <div class="finding-head"><div><b>${escapeHtml(f.finding_number||'Finding')}</b><div class="finding-desc">${escapeHtml(f.description||'-')}</div></div><span class="pill ${findingStatusClass(f.status)}">${findingStatusLabel(f.status)}</span></div>
-   <div class="finding-meta"><span>Risiko: ${escapeHtml(f.risk_level||'-')}</span><span>Target: ${escapeHtml(f.due_date||'-')}</span><span>Dibuat: ${f.created_at?new Date(f.created_at).toLocaleString('id-ID'):'-'}</span></div>
-   ${f.immediate_action?`<div class="finding-desc"><b>Tindakan langsung:</b> ${escapeHtml(f.immediate_action)}</div>`:''}
-   ${assigned}${f.corrective_action?`<div class="finding-desc"><b>Rencana perbaikan:</b> ${escapeHtml(f.corrective_action)}</div>`:''}
-   ${f.closing_notes?`<div class="finding-desc"><b>Laporan penyelesaian:</b> ${escapeHtml(f.closing_notes)}</div>`:''}
-   <div class="finding-photos">${photos('Foto BEFORE',beforeUrl,f.before_photo_path)}${photos('Foto AFTER',afterUrl,f.after_photo_path)}</div>
-   ${rejection}${manage}${actions}
-  </article>`;
- }));
- root.innerHTML=cards.join('');
-}
 
-async function saveFindingPlan(id){
- if(!['admin','supervisor'].includes(currentMember?.role)){alert('Hanya Admin atau Supervisor yang dapat mengatur penugasan.');return;}
- const finding=findingRows.find(x=>x.id===id);if(!finding||!['open','in_progress'].includes(finding.status))return;
- const assigned=document.getElementById('pic-'+id)?.value||null;
- const risk=document.getElementById('risk-'+id)?.value||null;
- const due=document.getElementById('due-'+id)?.value||null;
- const action=document.getElementById('action-'+id)?.value.trim()||null;
- const {error}=await supabaseClient.from('elodie_inspection_findings').update({assigned_to:assigned,risk_level:risk,due_date:due,corrective_action:action}).eq('id',id).eq('organization_id',currentOrgId).in('status',['open','in_progress']);
- if(error){alert('Gagal menyimpan penugasan: '+error.message);return;}
- alert('Penugasan dan rencana perbaikan berhasil disimpan.');
- await loadFindings();
-}
+  const supabaseUrl = Deno.env.get("SUPABASE_URL");
+  const anonKey = Deno.env.get("SUPABASE_ANON_KEY");
+  const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+  const appUrl = Deno.env.get("INSPECTOR_APP_URL");
 
-async function verifyFinding(id){
- if(!['admin','supervisor'].includes(currentMember?.role)){alert('Hanya Admin atau Supervisor yang dapat memverifikasi.');return;}
- const finding=findingRows.find(x=>x.id===id);if(!finding||finding.status!=='completed')return;
- if(!finding.before_photo_path||!finding.after_photo_path){alert('Verifikasi tidak dapat dilakukan karena foto BEFORE atau AFTER belum tersedia.');return;}
- if(!confirm('Setujui hasil perbaikan setelah membandingkan foto BEFORE dan AFTER?'))return;
- const {error}=await supabaseClient.from('elodie_inspection_findings').update({status:'verified',verified_by:currentUser.id,verified_at:new Date().toISOString(),rejection_notes:null}).eq('id',id).eq('organization_id',currentOrgId).eq('status','completed');
- if(error){alert('Gagal memverifikasi temuan: '+error.message);return;}
- await loadFindings();
-}
-async function rejectFinding(id){
- if(!['admin','supervisor'].includes(currentMember?.role)){alert('Hanya Admin atau Supervisor yang dapat menolak.');return;}
- const reason=prompt('Tuliskan alasan penolakan. Temuan akan dikembalikan ke In Progress:');
- if(reason===null)return;
- if(!reason.trim()){alert('Alasan penolakan wajib diisi.');return;}
- const {error}=await supabaseClient.from('elodie_inspection_findings').update({status:'in_progress',rejection_notes:reason.trim(),verified_by:null,verified_at:null}).eq('id',id).eq('organization_id',currentOrgId).eq('status','completed');
- if(error){alert('Gagal mengembalikan temuan: '+error.message);return;}
- await loadFindings();
-}
+  if (!supabaseUrl || !anonKey || !serviceRoleKey) {
+    return json(500, { error: "Server environment is not configured" });
+  }
 
+  const authHeader = req.headers.get("Authorization") ?? "";
+  const token = authHeader.startsWith("Bearer ")
+    ? authHeader.slice(7)
+    : "";
 
-// REPORTS & ANALYTICS: data live dari tabel inspeksi, respons, aset, anggota, dan temuan.
-let reportData={inspections:[],assets:[],members:[],responses:[],findings:[]};
-let reportFiltered=[];
-function reportDateValue(x){return String(x?.inspection_date||x?.created_at||'').slice(0,10);}
-function reportCounts(id){const c={ok:0,ng:0,na:0};reportData.responses.filter(r=>r.inspection_id===id).forEach(r=>{const k=String(r.result||'').toLowerCase();if(k in c)c[k]++;});return c;}
-async function loadReports(){
- if(!currentOrgId)return;
- const ids=['repTotalInspections','repOk','repNg','repVerified'];ids.forEach(id=>{const e=document.getElementById(id);if(e)e.textContent='…';});
- const org=currentOrgId;
- const [iq,aq,mq,rq,fq]=await Promise.all([
-  supabaseClient.from('elodie_inspection_inspections').select('id,inspection_number,asset_id,inspector_id,template_id,inspection_date,status,created_at').eq('organization_id',org).order('inspection_date',{ascending:false}),
-  supabaseClient.from('elodie_inspection_assets').select('id,asset_code,asset_name,location').eq('organization_id',org),
-  supabaseClient.from('elodie_inspection_members').select('user_id,full_name,role').eq('organization_id',org),
-  supabaseClient.from('elodie_inspection_responses').select('id,inspection_id,result').eq('organization_id',org),
-  supabaseClient.from('elodie_inspection_findings').select('id,inspection_id,status,risk_level').eq('organization_id',org)
- ]);
- const err=[iq,aq,mq,rq,fq].find(q=>q.error);
- if(err){document.getElementById('repInspectionRows').innerHTML=`<tr><td colspan="8" class="emptyrow">Gagal memuat laporan: ${escapeHtml(err.error.message)}</td></tr>`;ids.forEach(id=>{const e=document.getElementById(id);if(e)e.textContent='!';});return;}
- reportData={inspections:iq.data||[],assets:aq.data||[],members:mq.data||[],responses:rq.data||[],findings:fq.data||[]};
- const assetSelect=document.getElementById('reportAsset'),inspectorSelect=document.getElementById('reportInspector');
- const oldAsset=assetSelect.value,oldInspector=inspectorSelect.value;
- assetSelect.innerHTML='<option value="">Semua aset</option>'+reportData.assets.map(a=>`<option value="${a.id}">${escapeHtml(a.asset_code+' · '+a.asset_name)}</option>`).join('');
- inspectorSelect.innerHTML='<option value="">Semua Inspector</option>'+reportData.members.map(m=>`<option value="${m.user_id}">${escapeHtml(m.full_name||m.role||'User')}</option>`).join('');
- if([...assetSelect.options].some(o=>o.value===oldAsset))assetSelect.value=oldAsset;
- if([...inspectorSelect.options].some(o=>o.value===oldInspector))inspectorSelect.value=oldInspector;
- renderReports();
-}
-function renderReports(){
- if(!reportData.inspections)return;
- const from=document.getElementById('reportFrom')?.value||'',to=document.getElementById('reportTo')?.value||'',assetId=document.getElementById('reportAsset')?.value||'',inspectorId=document.getElementById('reportInspector')?.value||'',status=document.getElementById('reportStatus')?.value||'';
- const assetMap=new Map(reportData.assets.map(a=>[a.id,a])),memberMap=new Map(reportData.members.map(m=>[m.user_id,m.full_name||m.role||'User']));
- reportFiltered=reportData.inspections.filter(x=>{const d=reportDateValue(x);return(!from||d>=from)&&(!to||d<=to)&&(!assetId||x.asset_id===assetId)&&(!inspectorId||x.inspector_id===inspectorId)&&(!status||String(x.status||'').toLowerCase()===status);});
- const ids=new Set(reportFiltered.map(x=>x.id));const responses=reportData.responses.filter(r=>ids.has(r.inspection_id));const c={ok:0,ng:0,na:0};responses.forEach(r=>{const k=String(r.result||'').toLowerCase();if(k in c)c[k]++;});
- const relevantFindings=reportData.findings.filter(f=>ids.has(f.inspection_id));const verified=relevantFindings.filter(f=>String(f.status).toLowerCase()==='verified').length;
- document.getElementById('repTotalInspections').textContent=reportFiltered.length;document.getElementById('repOk').textContent=c.ok;document.getElementById('repNg').textContent=c.ng;
- const total=c.ok+c.ng+c.na;document.getElementById('repOkPct').textContent=`${total?(c.ok/total*100).toFixed(1):0}% dari seluruh jawaban`;document.getElementById('repNgPct').textContent=`${total?(c.ng/total*100).toFixed(1):0}% dari seluruh jawaban`;
- document.getElementById('repVerified').textContent=verified;document.getElementById('repFindingTotal').textContent=`${relevantFindings.length} total temuan · ${relevantFindings.length?Math.round(verified/relevantFindings.length*100):0}% verified`;
- const max=Math.max(1,c.ok,c.ng,c.na);const colors={ok:'#16a36a',ng:'#dc5454',na:'#8b9bad'};
- document.getElementById('repResultBars').innerHTML=['ok','ng','na'].map(k=>`<div class="report-bar-row"><b>${k.toUpperCase()}</b><div class="report-track"><div class="report-fill" style="width:${c[k]/max*100}%;background:${colors[k]}"></div></div><span>${c[k]} (${total?(c[k]/total*100).toFixed(1):0}%)</span></div>`).join('');
- const statuses=['open','in_progress','completed','verified'];document.getElementById('repFindingStatus').innerHTML=statuses.map(k=>`<div class="report-status-row"><span>${findingStatusLabel(k)}</span><b>${relevantFindings.filter(f=>String(f.status).toLowerCase()===k).length}</b></div>`).join('')||'<div class="finding-empty">Belum ada temuan.</div>';
- const assetAgg=new Map();reportFiltered.forEach(x=>{const a=assetMap.get(x.asset_id)||{};const key=x.asset_id;const z=assetAgg.get(key)||{name:(a.asset_code||'Aset')+' · '+(a.asset_name||''),inspections:0,ok:0,ng:0,na:0};z.inspections++;const n=reportCounts(x.id);z.ok+=n.ok;z.ng+=n.ng;z.na+=n.na;assetAgg.set(key,z);});
- const assetRows=[...assetAgg.values()].sort((a,b)=>b.ng-a.ng||b.inspections-a.inspections);
- document.getElementById('repAssetRows').innerHTML=assetRows.length?assetRows.map(a=>`<tr><td>${escapeHtml(a.name)}</td><td>${a.inspections}</td><td>${a.ok}</td><td><b class="${a.ng?'ng':''}">${a.ng}</b></td><td>${a.na}</td></tr>`).join(''):'<tr><td colspan="5" class="emptyrow">Tidak ada data aset untuk filter ini.</td></tr>';
- const risks=['critical','high','medium','low'];document.getElementById('repRiskRows').innerHTML=risks.map(k=>`<div class="report-status-row"><span>${k.toUpperCase()}</span><b>${relevantFindings.filter(f=>String(f.risk_level||'').toLowerCase()===k).length}</b></div>`).join('');
- const body=document.getElementById('repInspectionRows');body.innerHTML=reportFiltered.length?reportFiltered.map(x=>{const a=assetMap.get(x.asset_id)||{},n=reportCounts(x.id);return `<tr><td><b>${escapeHtml(x.inspection_number||'-')}</b></td><td>${escapeHtml(a.asset_code||'-')}<br><span class="muted">${escapeHtml(a.asset_name||'')}</span></td><td>${escapeHtml(memberMap.get(x.inspector_id)||'-')}</td><td>${formatShortDate(x.inspection_date||x.created_at)}</td><td>${statusPill(x.status)}</td><td>${n.ok}</td><td>${n.ng}</td><td>${n.na}</td></tr>`;}).join(''):'<tr><td colspan="8" class="emptyrow">Tidak ada inspeksi yang sesuai filter.</td></tr>';
-}
-function resetReportFilters(){['reportFrom','reportTo','reportAsset','reportInspector','reportStatus'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});renderReports();}
-function exportReportsCsv(){
- if(!reportFiltered.length){alert('Tidak ada data inspeksi untuk diekspor.');return;}
- const assetMap=new Map(reportData.assets.map(a=>[a.id,a])),memberMap=new Map(reportData.members.map(m=>[m.user_id,m.full_name||m.role||'User']));
- const rows=[['Nomor Inspeksi','Kode Aset','Nama Aset','Lokasi','Inspector','Tanggal','Status','OK','NG','NA']];
- reportFiltered.forEach(x=>{const a=assetMap.get(x.asset_id)||{},n=reportCounts(x.id);rows.push([x.inspection_number||'',a.asset_code||'',a.asset_name||'',a.location||'',memberMap.get(x.inspector_id)||'',reportDateValue(x),x.status||'',n.ok,n.ng,n.na]);});
- const csv='\uFEFFsep=,\r\n'+rows.map(row=>row.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\r\n');const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='QR-Inspection-Report-'+new Date().toISOString().slice(0,10)+'.csv';document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
-}
-function printReports(){window.print();}
+  if (!token) {
+    return json(401, { error: "Missing bearer token" });
+  }
 
+  const userClient = createClient(supabaseUrl, anonKey, {
+    global: { headers: { Authorization: `Bearer ${token}` } },
+    auth: { persistSession: false, autoRefreshToken: false },
+  });
 
-// USER MANAGEMENT — account creation is delegated to the secured Edge Function.
-let userRows=[];
-async function loadUsers(){
- if(!currentOrgId)return;
- const body=document.getElementById('userRows');if(body)body.innerHTML='<tr><td colspan="4" class="emptyrow">Memuat anggota organisasi...</td></tr>';
- if(currentMember?.role!=='admin'){if(body)body.innerHTML='<tr><td colspan="4" class="emptyrow">Hanya Admin yang dapat mengelola pengguna.</td></tr>';return;}
- const {data,error}=await supabaseClient.from('elodie_inspection_members').select('user_id,organization_id,full_name,role,is_active').eq('organization_id',currentOrgId).order('full_name');
- if(error){if(body)body.innerHTML=`<tr><td colspan="4" class="emptyrow">Gagal memuat anggota: ${escapeHtml(error.message)}</td></tr>`;return;}
- userRows=data||[];renderUsers();
-}
-function renderUsers(){
- const body=document.getElementById('userRows');if(!body)return;
- const q=(document.getElementById('userSearch')?.value||'').toLowerCase(),role=document.getElementById('userRoleFilter')?.value||'';
- const list=userRows.filter(u=>(!q||[u.full_name,u.role,u.user_id].join(' ').toLowerCase().includes(q))&&(!role||u.role===role));
- body.innerHTML=list.length?list.map(u=>`<tr><td><b>${escapeHtml(u.full_name||'Tanpa nama')}</b></td><td><span class="pill ${u.role==='admin'?'ok':u.role==='supervisor'?'pending':''}">${escapeHtml((u.role||'-').toUpperCase())}</span></td><td><span class="user-status ${u.is_active?'active':'inactive'}">${u.is_active?'AKTIF':'NONAKTIF'}</span></td><td><span class="user-id">${escapeHtml(u.user_id)}</span></td></tr>`).join(''):'<tr><td colspan="4" class="emptyrow">Tidak ada anggota yang sesuai filter.</td></tr>';
- document.getElementById('userTotal').textContent=userRows.length;document.getElementById('userAdminCount').textContent=userRows.filter(u=>u.role==='admin').length;document.getElementById('userSupervisorCount').textContent=userRows.filter(u=>u.role==='supervisor').length;document.getElementById('userInspectorCount').textContent=userRows.filter(u=>u.role==='inspector').length;
-}
-function openUserModal(){
- if(currentMember?.role!=='admin'){alert('Hanya Admin yang dapat menambahkan pengguna.');return;}
- document.getElementById('userForm').reset();document.getElementById('userMethod').value='create_manual';document.getElementById('userFormMessage').textContent='';toggleUserMethod();document.getElementById('userModal').classList.add('open');
-}
-function closeUserModal(){document.getElementById('userModal').classList.remove('open');}
-function toggleUserMethod(){
- const invite=document.getElementById('userMethod').value==='invite_email';document.getElementById('initialPasswordField').style.display=invite?'none':'grid';document.getElementById('newUserPassword').required=!invite;document.getElementById('saveUserBtn').textContent=invite?'Kirim Undangan':'Buat Akun';document.getElementById('userMethodNote').textContent=invite?'Undangan akan dikirim ke email pengguna. Setelah menyelesaikan proses undangan, Inspector dan Supervisor diwajibkan mengganti password sebelum menggunakan fitur inspeksi.':'Akun dibuat langsung. Inspector dan Supervisor wajib mengganti password awal saat login pertama. Admin tidak diwajibkan mengganti password oleh alur ini.';
-}
-async function submitUser(e){
- e.preventDefault();if(currentMember?.role!=='admin'){alert('Hanya Admin yang dapat menambahkan pengguna.');return;}
- const method=document.getElementById('userMethod').value,full_name=document.getElementById('newUserName').value.trim(),email=document.getElementById('newUserEmail').value.trim().toLowerCase(),role=document.getElementById('newUserRole').value,initial_password=document.getElementById('newUserPassword').value;
- if(method==='create_manual'&&initial_password.length<12){document.getElementById('userFormMessage').textContent='Password awal minimal 12 karakter.';return;}
- const btn=document.getElementById('saveUserBtn'),msg=document.getElementById('userFormMessage');btn.disabled=true;btn.textContent='Memproses...';msg.textContent='';
- const body={action:method,full_name,email,role};if(method==='create_manual')body.initial_password=initial_password;
- const {data,error}=await supabaseClient.functions.invoke('user-management',{body});
- btn.disabled=false;btn.textContent=method==='invite_email'?'Kirim Undangan':'Buat Akun';
- if(error){msg.textContent='Gagal: '+(error.message||'Edge Function tidak dapat dipanggil.');return;}
- if(!data?.success){msg.textContent='Gagal: '+(data?.error||'Respons server tidak valid.');return;}
- alert(data.message||'Pengguna berhasil diproses.');closeUserModal();await loadUsers();
-}
+  const adminClient = createClient(supabaseUrl, serviceRoleKey, {
+    auth: { persistSession: false, autoRefreshToken: false },
+  });
 
-</script>
-</body>
-</html>
+  // Validasi identitas pemanggil
+  const { data: authData, error: authError } =
+    await userClient.auth.getUser();
+
+  if (authError || !authData.user) {
+    return json(401, { error: "Invalid or expired session" });
+  }
+
+  const caller = authData.user;
+
+  let body: Record<string, unknown>;
+
+  try {
+    body = await req.json();
+  } catch {
+    return json(400, { error: "Invalid JSON body" });
+  }
+
+  const action = String(body.action ?? "");
+
+  // Pengguna hanya boleh mengganti password akunnya sendiri.
+  if (action === "complete_password_setup") {
+    const newPassword = String(body.new_password ?? "");
+
+    if (newPassword.length < 12) {
+      return json(400, {
+        error: "Password must contain at least 12 characters",
+      });
+    }
+
+    const currentMetadata = caller.app_metadata ?? {};
+
+    const { error } = await adminClient.auth.admin.updateUserById(
+      caller.id,
+      {
+        password: newPassword,
+        app_metadata: {
+          ...currentMetadata,
+          must_change_password: false,
+        },
+      },
+    );
+
+    if (error) {
+      return json(400, { error: error.message });
+    }
+
+    return json(200, {
+      success: true,
+      message:
+        "Password updated. Refresh the session to continue.",
+    });
+  }
+
+  // Semua tindakan pengelolaan akun hanya untuk Admin aktif.
+  const { data: adminMembership, error: membershipError } =
+    await adminClient
+      .from("elodie_inspection_members")
+      .select("organization_id, role, is_active")
+      .eq("user_id", caller.id)
+      .eq("is_active", true)
+      .maybeSingle();
+
+  if (
+    membershipError ||
+    !adminMembership ||
+    adminMembership.role !== "admin"
+  ) {
+    return json(403, {
+      error: "Only an active organization Admin can manage users",
+    });
+  }
+
+  if (action === "force_password_reset") {
+    const targetUserId = String(body.target_user_id ?? "").trim();
+    if (!targetUserId) {
+      return json(400, { error: "Target user ID is required" });
+    }
+
+    const { data: targetMembership, error: targetMembershipError } =
+      await adminClient
+        .from("elodie_inspection_members")
+        .select("user_id, role, is_active")
+        .eq("organization_id", adminMembership.organization_id)
+        .eq("user_id", targetUserId)
+        .eq("is_active", true)
+        .maybeSingle();
+
+    if (
+      targetMembershipError ||
+      !targetMembership ||
+      !["inspector", "supervisor"].includes(targetMembership.role)
+    ) {
+      return json(404, {
+        error: "Active Inspector/Supervisor membership was not found in this organization",
+      });
+    }
+
+    const { data: targetAuth, error: targetAuthError } =
+      await adminClient.auth.admin.getUserById(targetUserId);
+
+    if (targetAuthError || !targetAuth.user) {
+      return json(404, { error: "Target Auth user was not found" });
+    }
+
+    const targetMetadata = targetAuth.user.app_metadata ?? {};
+    const { error: updateError } =
+      await adminClient.auth.admin.updateUserById(targetUserId, {
+        app_metadata: {
+          ...targetMetadata,
+          must_change_password: true,
+        },
+      });
+
+    if (updateError) {
+      return json(400, { error: updateError.message });
+    }
+
+    return json(200, {
+      success: true,
+      method: action,
+      user_id: targetUserId,
+      must_change_password: true,
+      message: "User will be required to change password at next login",
+    });
+  }
+
+  if (
+    action !== "create_manual" &&
+    action !== "invite_email"
+  ) {
+    return json(400, { error: "Unsupported action" });
+  }
+
+  const fullName = String(body.full_name ?? "").trim();
+  const email = String(body.email ?? "").trim().toLowerCase();
+  const role = String(body.role ?? "").toLowerCase();
+
+  if (
+    !fullName ||
+    !email ||
+    !["admin", "supervisor", "inspector"].includes(role)
+  ) {
+    return json(400, {
+      error: "Name, valid email, and role are required",
+    });
+  }
+
+  if (
+    fullName.length > 120 ||
+    email.length > 254 ||
+    !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+  ) {
+    return json(400, { error: "Invalid name or email" });
+  }
+
+  const organizationId = adminMembership.organization_id;
+  const redirectTo =
+    appUrl ||
+    "https://ekoardiyanto1999.github.io/qr-inspection-mobile/";
+
+  // Hanya Inspector dan Supervisor yang wajib mengganti password.
+  const mustChangePassword =
+    role === "inspector" || role === "supervisor";
+
+  let createdUserId: string | null = null;
+
+  if (action === "create_manual") {
+    const initialPassword = String(body.initial_password ?? "");
+
+    if (initialPassword.length < 12) {
+      return json(400, {
+        error: "Initial password must contain at least 12 characters",
+      });
+    }
+
+    const { data, error } =
+      await adminClient.auth.admin.createUser({
+        email,
+        password: initialPassword,
+        email_confirm: true,
+        user_metadata: { full_name: fullName },
+        app_metadata: {
+          must_change_password: mustChangePassword,
+        },
+      });
+
+    if (error || !data.user) {
+      return json(400, {
+        error: error?.message ?? "Could not create user",
+      });
+    }
+
+    createdUserId = data.user.id;
+  } else {
+    const { data, error } =
+      await adminClient.auth.admin.inviteUserByEmail(email, {
+        redirectTo,
+        data: { full_name: fullName },
+      });
+
+    if (error || !data.user) {
+      return json(400, {
+        error: error?.message ?? "Could not send invitation",
+      });
+    }
+
+    createdUserId = data.user.id;
+
+    // Tetapkan flag wajib ganti password pada akun undangan.
+    const currentMetadata = data.user.app_metadata ?? {};
+
+    const { error: metadataError } =
+      await adminClient.auth.admin.updateUserById(
+        createdUserId,
+        {
+          app_metadata: {
+            ...currentMetadata,
+            must_change_password: mustChangePassword,
+          },
+        },
+      );
+
+    if (metadataError) {
+      await adminClient.auth.admin.deleteUser(createdUserId);
+
+      return json(400, {
+        error:
+          "Invitation account was rolled back because password setup status could not be configured: " +
+          metadataError.message,
+      });
+    }
+  }
+
+  // Buat keanggotaan organisasi.
+  const { error: insertError } = await adminClient
+    .from("elodie_inspection_members")
+    .insert({
+      organization_id: organizationId,
+      user_id: createdUserId,
+      full_name: fullName,
+      role,
+      is_active: true,
+    });
+
+  if (insertError) {
+    await adminClient.auth.admin.deleteUser(createdUserId);
+
+    return json(400, {
+      error:
+        "Account was rolled back because membership creation failed: " +
+        insertError.message,
+    });
+  }
+
+  return json(200, {
+    success: true,
+    method: action,
+    user_id: createdUserId,
+    role,
+    must_change_password: mustChangePassword,
+    message: action === "invite_email"
+      ? "Invitation sent and organization membership created"
+      : mustChangePassword
+        ? "Account created. User must change the initial password at first login"
+        : "Admin account created",
+  });
+});
