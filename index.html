@@ -68,8 +68,33 @@ button{font:inherit;cursor:pointer}.app{min-height:100vh;display:flex}.sidebar{w
 .finding-actions .approve{background:#16865a;color:white;border-color:#16865a}
 .finding-actions .reject{color:#b54747;border-color:#e8caca}
 .finding-empty{padding:28px;text-align:center;color:var(--muted);font-size:12px}
+.finding-manage{margin-top:13px;padding:13px;background:#f7f9fc;border:1px solid var(--line);border-radius:9px}
+.finding-manage h4{margin:0 0 9px;font-size:12px}
+.finding-manage-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.finding-manage-grid label{display:grid;gap:4px;font-size:10px;color:var(--muted);font-weight:650}
+.finding-manage-grid input,.finding-manage-grid select,.finding-manage-grid textarea{width:100%;min-width:0;border:1px solid var(--line);border-radius:7px;padding:8px;font:inherit;font-size:11px;background:white;color:var(--text)}
+.finding-manage-grid .wide{grid-column:span 2}
+@media(max-width:800px){.finding-manage-grid{grid-template-columns:1fr 1fr}.finding-manage-grid .wide{grid-column:1/-1}}
 @media(max-width:650px){.finding-photos{grid-template-columns:1fr 1fr}.finding-photo img{height:110px}}
 
+
+#view-monitoring .finding-toolbar input,#view-monitoring .finding-toolbar select{border:1px solid var(--line);background:#fff;border-radius:8px;padding:9px 10px;font:inherit;font-size:12px;color:#405164}
+#view-monitoring .finding-toolbar label{display:flex;align-items:center;gap:6px}
+.mon-detail-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:8px 0 17px}
+.mon-detail-cell{background:#f5f8fc;border:1px solid var(--line);border-radius:9px;padding:11px}
+.mon-detail-cell small{display:block;color:var(--muted);font-size:10px;margin-bottom:4px}.mon-detail-cell b{font-size:12px;overflow-wrap:anywhere}
+.mon-response-table{margin-top:12px}.mon-response-table td,.mon-response-table th{padding:10px 8px}
+.mon-notes{white-space:pre-wrap;background:#f8fafc;border:1px solid var(--line);border-radius:8px;padding:12px;font-size:11px;color:#405164}
+@media(max-width:650px){.mon-detail-grid{grid-template-columns:1fr 1fr}}
+
+
+.tpl-item-row{display:grid;grid-template-columns:110px minmax(160px,1.5fr) minmax(130px,1fr) 90px 42px;gap:8px;align-items:center;margin:8px 0}.tpl-item-row input{min-width:0;padding:10px}.tpl-items-head{display:grid;grid-template-columns:110px minmax(160px,1.5fr) minmax(130px,1fr) 90px 42px;gap:8px;color:#718096;font-size:10px;font-weight:800;text-transform:uppercase;padding:0 2px}.tpl-items-box{border:1px solid var(--line);border-radius:11px;padding:12px;margin-top:8px}.tpl-toggle{display:flex;align-items:center;gap:7px;font-size:12px;color:#526274}.tpl-toggle input{width:auto}.tpl-actions{display:flex;gap:6px;flex-wrap:wrap}.tpl-modal{width:min(900px,100%)}
+@media(max-width:700px){.tpl-item-row,.tpl-items-head{grid-template-columns:1fr 1fr}.tpl-item-row .tpl-item-code{grid-column:1}.tpl-item-row .tpl-item-text{grid-column:2}.tpl-item-row .tpl-item-guidance{grid-column:1/-1}.tpl-item-row .tpl-item-required{grid-column:1}.tpl-item-row button{grid-column:2}}
+
+.report-bars{display:grid;gap:13px;padding:8px 0}.report-bar-row{display:grid;grid-template-columns:45px 1fr 55px;gap:10px;align-items:center;font-size:11px}.report-track{height:13px;background:#edf1f6;border-radius:20px;overflow:hidden}.report-fill{height:100%;border-radius:20px}.report-status-list{display:grid;gap:10px}.report-status-row{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid #eef2f6;font-size:11px}.report-status-row:last-child{border-bottom:0}.report-status-row b{font-size:12px}.report-toolbar label{display:flex;align-items:center;gap:6px}
+@media print{.sidebar,.topbar,.actions,.finding-toolbar button,.finding-toolbar select,.finding-toolbar input{display:none!important}.main{margin:0!important;width:100%!important}.content{padding:0!important}.view{display:none!important}#view-reports{display:block!important}.card{box-shadow:none;break-inside:avoid}.report-toolbar{display:none!important}}
+
+.user-id{font-family:ui-monospace,Consolas,monospace;font-size:10px;color:#718096;overflow-wrap:anywhere;max-width:260px}.user-status{display:inline-block;border-radius:20px;padding:4px 8px;font-size:10px;font-weight:700}.user-status.active{background:#e9f8ef;color:#198653}.user-status.inactive{background:#ffeded;color:#c34747}
 </style>
 </head>
 <body>
@@ -145,16 +170,42 @@ button{font:inherit;cursor:pointer}.app{min-height:100vh;display:flex}.sidebar{w
    </div>
   </section>
   <section class="view" id="view-qr"><div class="pagehead"><div><div class="eyebrow">Asset identification</div><h1>QR Code Management</h1><p>QR Code dibuat dari token permanen setiap aset. Token tidak berubah saat aset diedit.</p></div><button class="btn" onclick="loadAssets().then(renderQrCards)">↻ Refresh</button></div><div class="card panel" style="margin-bottom:15px"><div class="panelhead"><div><h3>QR Code Aset</h3><div class="sub">Pilih QR untuk melihat, mengunduh PNG, atau mencetak label.</div></div><span class="pill ok">Permanent identity</span></div><div id="qrCards" class="qr-grid"><div class="emptyrow">Memuat QR Code...</div></div></div><div class="notice">QR saat ini menyimpan UUID permanen (qr_token) sebagai identitas aset. Pemindaian akan menghasilkan token tersebut; halaman inspeksi mobile yang akan menggunakan token ini akan dibuat pada tahap Mobile Inspector.</div></section>
-  <section class="view" id="view-checklist"><div class="pagehead"><div><div class="eyebrow">Inspection standards</div><h1>Inspection Checklist</h1><p>Buat template checklist berdasarkan jenis aset.</p></div><button class="btn primary">＋ Buat Template</button></div><div class="card placeholder"><div class="bigico">☷</div><h2>Inspection Checklist</h2><p>Template pemeriksaan, item checklist, pilihan OK/NG/NA, dan pengaturan wajib foto akan tersedia di sini.</p><span class="pill pending">Kerangka UI · Menunggu integrasi</span></div></section>
-  <section class="view" id="view-monitoring"><div class="pagehead"><div><div class="eyebrow">Operational control</div><h1>Inspection Monitoring</h1><p>Pantau pelaksanaan inspeksi berdasarkan aset, petugas, dan periode.</p></div><button class="btn">▤ Filter</button></div><div class="card placeholder"><div class="bigico">◷</div><h2>Inspection Monitoring</h2><p>Daftar inspeksi, status pekerjaan, jadwal, hasil pemeriksaan, dan detail riwayat akan ditampilkan di sini.</p><span class="pill pending">Kerangka UI · Menunggu integrasi</span></div></section>
+  <section class="view" id="view-checklist">
+   <div class="pagehead"><div><div class="eyebrow">Inspection standards</div><h1>Inspection Checklist</h1><p>Kelola template dan item pemeriksaan berdasarkan jenis aset.</p></div><div class="actions"><button class="btn" onclick="loadChecklistTemplates()">↻ Refresh</button><button class="btn primary" onclick="openTemplateEditor()">＋ Buat Template</button></div></div>
+   <div class="grid stats"><div class="card stat"><div class="stathead">Total Template <span class="staticon">☷</span></div><div class="statvalue" id="tplTotal">—</div><div class="statfoot">Template organisasi</div></div><div class="card stat"><div class="stathead">Template Aktif <span class="staticon">✓</span></div><div class="statvalue" id="tplActive">—</div><div class="statfoot">Tersedia untuk inspeksi</div></div><div class="card stat"><div class="stathead">Jenis Aset <span class="staticon">▣</span></div><div class="statvalue" id="tplAssetTypes">—</div><div class="statfoot">Kategori yang memiliki template</div></div><div class="card stat"><div class="stathead">Total Item <span class="staticon">≡</span></div><div class="statvalue" id="tplItems">—</div><div class="statfoot">Item pada template aktif</div></div></div>
+   <div class="card panel"><div class="asset-toolbar"><div class="searchbox"><span>⌕</span><input id="tplSearch" placeholder="Cari nama template atau jenis aset..." oninput="renderChecklistTemplates()"></div><select id="tplStatusFilter" class="filterselect" onchange="renderChecklistTemplates()"><option value="">Semua status</option><option value="true">Aktif</option><option value="false">Nonaktif</option></select></div><div class="panelhead"><div><h3>Daftar Template Checklist</h3><div class="sub">Template dan item tersimpan di Supabase</div></div><span class="pill ok">Live database</span></div><div class="asset-table-wrap"><table><thead><tr><th>Nama Template</th><th>Jenis Aset</th><th>Versi</th><th>Jumlah Item</th><th>Status</th><th>Dibuat</th><th>Aksi</th></tr></thead><tbody id="templateRows"><tr><td colspan="7" class="emptyrow">Memuat template...</td></tr></tbody></table></div><div class="notice" style="margin-top:15px">Mengedit template yang sudah pernah dipakai akan membuat versi baru. Versi lama dipertahankan agar riwayat inspeksi terdahulu tidak berubah.</div></div>
+  </section>
+  <section class="view" id="view-monitoring">
+   <div class="pagehead"><div><div class="eyebrow">Operational control</div><h1>Inspection Monitoring</h1><p>Pantau riwayat inspeksi, status pekerjaan, petugas, aset, dan hasil checklist.</p></div><button class="btn" onclick="loadMonitoring()">↻ Refresh Data</button></div>
+   <div class="grid stats">
+    <div class="card stat"><div class="stathead">Total Inspections <span class="staticon">☷</span></div><div class="statvalue" id="monTotal">—</div><div class="statfoot">Sesuai filter aktif</div></div>
+    <div class="card stat"><div class="stathead">Submitted <span class="staticon">✓</span></div><div class="statvalue" id="monSubmitted">—</div><div class="statfoot">Inspeksi terkirim</div></div>
+    <div class="card stat"><div class="stathead">Draft <span class="staticon">◷</span></div><div class="statvalue" id="monDraft">—</div><div class="statfoot">Belum disubmit</div></div>
+    <div class="card stat"><div class="stathead">NG Responses <span class="staticon">⚑</span></div><div class="statvalue" id="monNg">—</div><div class="statfoot">Jawaban checklist NG</div></div>
+   </div>
+   <div class="card panel">
+    <div class="finding-toolbar">
+     <input id="monSearch" placeholder="Cari nomor inspeksi, aset, atau inspector..." oninput="renderMonitoring()">
+     <select id="monStatus" onchange="renderMonitoring()"><option value="">Semua status</option><option value="draft">Draft</option><option value="submitted">Submitted</option><option value="reviewed">Reviewed</option></select>
+     <label class="muted" style="font-size:11px">Dari <input id="monDateFrom" type="date" onchange="renderMonitoring()"></label>
+     <label class="muted" style="font-size:11px">Sampai <input id="monDateTo" type="date" onchange="renderMonitoring()"></label>
+     <button class="smallbtn" onclick="resetMonitoringFilters()">Reset Filter</button>
+    </div>
+    <div class="panelhead"><div><h3>Riwayat Inspeksi</h3><div class="sub">Data langsung dari Supabase · klik Detail untuk melihat jawaban checklist</div></div><span class="pill ok" id="monLiveLabel">Live database</span></div>
+    <div class="asset-table-wrap"><table><thead><tr><th>Nomor Inspeksi</th><th>Aset</th><th>Inspector</th><th>Tanggal</th><th>Status</th><th>OK</th><th>NG</th><th>NA</th><th>Aksi</th></tr></thead><tbody id="monRows"><tr><td colspan="9" class="emptyrow">Memuat data inspeksi...</td></tr></tbody></table></div>
+    <div class="notice" style="margin-top:14px;margin-bottom:0">Filter tanggal menggunakan tanggal inspeksi. Data jadwal yang belum terlaksana tidak ditampilkan karena modul jadwal belum tersedia pada database saat ini.</div>
+   </div>
+   <div class="modalback" id="inspectionDetailBack" onclick="if(event.target===this)closeInspectionDetail()"><div class="modal" style="width:min(820px,100%)"><div class="modalhead"><div><div class="eyebrow">Inspection record</div><h2 id="inspectionDetailTitle">Detail Inspeksi</h2></div><button class="smallbtn" onclick="closeInspectionDetail()">✕ Tutup</button></div><div id="inspectionDetailBody"><div class="finding-empty">Memuat detail...</div></div></div></div>
+  </section>
   <section class="view" id="view-findings">
-    <div class="pagehead"><div><div class="eyebrow">Corrective action</div><h1>Findings & Corrective Actions</h1><p>Periksa bukti BEFORE dan AFTER, lalu verifikasi atau kembalikan hasil perbaikan.</p></div><button class="btn" onclick="loadFindings()">↻ Refresh</button></div>
+    <div class="pagehead"><div><div class="eyebrow">Corrective action</div><h1>Findings & Corrective Actions</h1><p>Kelola penugasan temuan, pantau proses perbaikan, lalu verifikasi bukti BEFORE dan AFTER.</p></div><button class="btn" onclick="loadFindings()">↻ Refresh</button></div>
     <div class="grid stats">
      <div class="card stat"><div class="stathead">Open <span class="staticon">⚑</span></div><div class="statvalue" id="findingOpenCount">0</div><div class="statfoot">Menunggu tindak lanjut</div></div>
      <div class="card stat"><div class="stathead">In Progress <span class="staticon">◷</span></div><div class="statvalue" id="findingProgressCount">0</div><div class="statfoot">Sedang diperbaiki</div></div>
      <div class="card stat"><div class="stathead">Completed <span class="staticon">✓</span></div><div class="statvalue" id="findingCompletedCount">0</div><div class="statfoot">Menunggu verifikasi Supervisor</div></div>
      <div class="card stat"><div class="stathead">Verified <span class="staticon">✔</span></div><div class="statvalue" id="findingVerifiedCount">0</div><div class="statfoot">Perbaikan disetujui</div></div>
     </div>
+    <div class="notice">Alur: Open = temuan baru; Inspector memulai perbaikan dari Mobile Inspector sehingga status menjadi In Progress; setelah foto AFTER dan laporan dikirim, status menjadi Completed untuk verifikasi Supervisor/Admin.</div>
     <div class="card panel">
      <div class="finding-toolbar">
       <input id="findingSearch" placeholder="Cari nomor temuan atau deskripsi..." oninput="renderFindings()">
@@ -165,11 +216,48 @@ button{font:inherit;cursor:pointer}.app{min-height:100vh;display:flex}.sidebar{w
      <div id="findingList" class="finding-list"><div class="finding-empty">Memuat temuan...</div></div>
     </div>
    </section>
-  <section class="view" id="view-reports"><div class="pagehead"><div><div class="eyebrow">Performance & records</div><h1>Reports</h1><p>Rekap hasil inspeksi dan laporan kondisi aset.</p></div><button class="btn">↓ Export</button></div><div class="card placeholder"><div class="bigico">▤</div><h2>Reports</h2><p>Laporan berdasarkan periode, aset, lokasi, petugas, status OK/NG, dan ekspor PDF/Excel akan dikembangkan di tahap laporan.</p><span class="pill pending">Kerangka UI · Menunggu integrasi</span></div></section>
-  <section class="view" id="view-users"><div class="pagehead"><div><div class="eyebrow">Access control</div><h1>User Management</h1><p>Kelola anggota organisasi dan hak akses mereka.</p></div><button class="btn primary">＋ Undang User</button></div><div class="card placeholder"><div class="bigico">♙</div><h2>User Management</h2><p>Pengelolaan akun Admin, Supervisor, dan Inspector dengan akses per organisasi akan dihubungkan ke Supabase Auth.</p><span class="pill pending">Kerangka UI · Menunggu integrasi</span></div></section>
+  <section class="view" id="view-reports">
+   <div class="pagehead"><div><div class="eyebrow">Performance & records</div><h1>Reports & Analytics</h1><p>Analisis inspeksi, hasil checklist, dan tindak lanjut temuan berdasarkan data organisasi.</p></div><div class="actions"><button class="btn" onclick="exportReportsCsv()">↓ Export Excel (CSV)</button><button class="btn primary" onclick="printReports()">Cetak / PDF</button></div></div>
+   <div class="card panel" style="margin-bottom:16px"><div class="finding-toolbar">
+    <label>Mulai <input id="reportFrom" type="date" onchange="renderReports()"></label>
+    <label>Sampai <input id="reportTo" type="date" onchange="renderReports()"></label>
+    <select id="reportAsset" onchange="renderReports()"><option value="">Semua aset</option></select>
+    <select id="reportInspector" onchange="renderReports()"><option value="">Semua Inspector</option></select>
+    <select id="reportStatus" onchange="renderReports()"><option value="">Semua status</option><option value="draft">Draft</option><option value="submitted">Submitted</option><option value="reviewed">Reviewed</option></select>
+    <button class="btn" onclick="resetReportFilters()">Reset Filter</button><button class="btn" onclick="loadReports()">↻ Refresh</button>
+   </div><div class="sub">Filter menggunakan tanggal inspeksi. Laporan dihitung dari inspeksi dan respons checklist yang tersimpan.</div></div>
+   <div class="grid stats">
+    <div class="card stat"><div class="stathead">Total Inspeksi</div><div class="statvalue" id="repTotalInspections">—</div><div class="statfoot">Sesuai filter aktif</div></div>
+    <div class="card stat"><div class="stathead">Jawaban OK</div><div class="statvalue" id="repOk">—</div><div class="statfoot" id="repOkPct">—</div></div>
+    <div class="card stat"><div class="stathead">Jawaban NG</div><div class="statvalue" id="repNg">—</div><div class="statfoot" id="repNgPct">—</div></div>
+    <div class="card stat"><div class="stathead">Temuan Verified</div><div class="statvalue" id="repVerified">—</div><div class="statfoot" id="repFindingTotal">—</div></div>
+   </div>
+   <div class="grid cols" style="margin-bottom:16px">
+    <div class="card panel"><div class="panelhead"><div><h3>Distribusi Hasil Checklist</h3><div class="sub">Komposisi jawaban OK, NG, dan NA</div></div></div><div id="repResultBars" class="report-bars"><div class="finding-empty">Memuat data...</div></div></div>
+    <div class="card panel"><div class="panelhead"><div><h3>Status Temuan</h3><div class="sub">Temuan yang terkait dengan inspeksi terfilter</div></div></div><div id="repFindingStatus" class="report-status-list"></div></div>
+   </div>
+   <div class="grid bottom" style="margin-bottom:16px">
+    <div class="card panel"><div class="panelhead"><div><h3>Ringkasan per Aset</h3><div class="sub">Jumlah inspeksi dan jawaban NG</div></div></div><div class="asset-table-wrap"><table><thead><tr><th>Aset</th><th>Inspeksi</th><th>OK</th><th>NG</th><th>NA</th></tr></thead><tbody id="repAssetRows"><tr><td colspan="5" class="emptyrow">Memuat...</td></tr></tbody></table></div></div>
+    <div class="card panel"><div class="panelhead"><div><h3>Temuan berdasarkan Risiko</h3><div class="sub">Distribusi tingkat risiko</div></div></div><div id="repRiskRows" class="report-status-list"></div></div>
+   </div>
+   <div class="card panel"><div class="panelhead"><div><h3>Detail Riwayat Inspeksi</h3><div class="sub">Data sesuai periode dan filter yang dipilih</div></div><span class="pill ok" id="reportLiveLabel">Live database</span></div><div class="asset-table-wrap"><table><thead><tr><th>Nomor Inspeksi</th><th>Aset</th><th>Inspector</th><th>Tanggal</th><th>Status</th><th>OK</th><th>NG</th><th>NA</th></tr></thead><tbody id="repInspectionRows"><tr><td colspan="8" class="emptyrow">Memuat laporan...</td></tr></tbody></table></div><div class="notice" style="margin:14px 0 0">Catatan: Export Excel menghasilkan CSV yang dapat dibuka di Microsoft Excel. Pilihan Cetak / PDF menggunakan dialog cetak browser. Data jadwal inspeksi yang belum terlaksana tidak termasuk karena modul jadwal belum tersedia.</div></div>
+  </section>
+  <section class="view" id="view-users">
+   <div class="pagehead"><div><div class="eyebrow">Access control</div><h1>User Management</h1><p>Kelola anggota organisasi dan hak akses mereka melalui Supabase Auth.</p></div><div class="actions"><button class="btn" onclick="loadUsers()">↻ Refresh</button><button class="btn primary" onclick="openUserModal()">＋ Tambah User</button></div></div>
+   <div class="grid stats"><div class="card stat"><div class="stathead">Total Anggota <span class="staticon">♙</span></div><div class="statvalue" id="userTotal">—</div><div class="statfoot">Anggota organisasi aktif dan nonaktif</div></div><div class="card stat"><div class="stathead">Admin <span class="staticon">★</span></div><div class="statvalue" id="userAdminCount">—</div><div class="statfoot">Hak akses administrator</div></div><div class="card stat"><div class="stathead">Supervisor <span class="staticon">✓</span></div><div class="statvalue" id="userSupervisorCount">—</div><div class="statfoot">Pengawas inspeksi</div></div><div class="card stat"><div class="stathead">Inspector <span class="staticon">▣</span></div><div class="statvalue" id="userInspectorCount">—</div><div class="statfoot">Petugas inspeksi</div></div></div>
+   <div class="card panel"><div class="asset-toolbar"><div class="searchbox"><span>⌕</span><input id="userSearch" placeholder="Cari nama, role, atau User ID..." oninput="renderUsers()"></div><select id="userRoleFilter" class="filterselect" onchange="renderUsers()"><option value="">Semua role</option><option value="admin">Admin</option><option value="supervisor">Supervisor</option><option value="inspector">Inspector</option></select></div><div class="panelhead"><div><h3>Anggota Organisasi</h3><div class="sub">Daftar membership organisasi aktif yang tersimpan di Supabase</div></div><span class="pill ok">Live database</span></div><div class="asset-table-wrap"><table><thead><tr><th>Nama</th><th>Role</th><th>Status</th><th>User ID</th></tr></thead><tbody id="userRows"><tr><td colspan="4" class="emptyrow">Memuat anggota...</td></tr></tbody></table></div><div class="notice" style="margin-top:14px;margin-bottom:0">Email akun belum ditampilkan karena tabel membership saat ini tidak menyimpan kolom email. Pembuatan akun dan undangan dilakukan melalui Edge Function di server; service_role tidak digunakan di browser.</div></div>
+  </section>
   <section class="view" id="view-settings"><div class="pagehead"><div><div class="eyebrow">Configuration</div><h1>Settings</h1><p>Pengaturan organisasi dan preferensi aplikasi.</p></div></div><div class="card placeholder"><div class="bigico">⚙</div><h2>Organization Settings</h2><p>Pengaturan profil organisasi, bahasa, zona waktu, dan preferensi sistem akan tersedia di sini.</p><span class="pill pending">Kerangka UI · Menunggu integrasi</span></div></section>
  </div>
 
+<div class="modalback" id="userModal" role="dialog" aria-modal="true" aria-labelledby="userModalTitle" onclick="if(event.target===this)closeUserModal()">
+ <div class="modal"><div class="modalhead"><div><div class="eyebrow">Organization access</div><h2 id="userModalTitle">Tambah User</h2></div><button class="smallbtn" type="button" onclick="closeUserModal()">✕ Tutup</button></div>
+  <form id="userForm" onsubmit="submitUser(event)"><div class="field full"><label>Metode penambahan</label><select id="userMethod" onchange="toggleUserMethod()"><option value="create_manual">Tambah Manual oleh Admin</option><option value="invite_email">Undang melalui Email</option></select></div>
+   <div class="formgrid" style="margin-top:13px"><div class="field full"><label for="newUserName">Nama Lengkap *</label><input id="newUserName" required maxlength="120" placeholder="Nama pengguna"></div><div class="field full"><label for="newUserEmail">Email *</label><input id="newUserEmail" type="email" required maxlength="254" placeholder="nama@perusahaan.com"></div><div class="field full"><label for="newUserRole">Role *</label><select id="newUserRole" required><option value="inspector">Inspector</option><option value="supervisor">Supervisor</option><option value="admin">Admin</option></select></div><div class="field full" id="initialPasswordField"><label for="newUserPassword">Password Awal * (minimal 12 karakter)</label><input id="newUserPassword" type="password" minlength="12" autocomplete="new-password" placeholder="Tentukan password awal"></div></div>
+   <div class="notice" id="userMethodNote" style="margin-top:13px">Akun dibuat langsung. Inspector dan Supervisor wajib mengganti password saat login pertama.</div><div id="userFormMessage" class="authmessage" aria-live="polite"></div><div class="modalfoot"><button type="button" class="btn" onclick="closeUserModal()">Batal</button><button type="submit" class="btn primary" id="saveUserBtn">Buat Akun</button></div>
+  </form>
+ </div>
+</div>
 <div class="modalback" id="assetModal" role="dialog" aria-modal="true" aria-labelledby="assetModalTitle">
  <div class="modal">
   <div class="modalhead"><h2 id="assetModalTitle">Tambah Aset</h2><button class="smallbtn" onclick="closeAssetModal()">✕ Tutup</button></div>
@@ -192,6 +280,10 @@ button{font:inherit;cursor:pointer}.app{min-height:100vh;display:flex}.sidebar{w
  </div>
 </div>
 
+
+<div class="modalback" id="templateDetailModal" role="dialog" aria-modal="true" aria-labelledby="templateDetailTitle"><div class="modal tpl-modal"><div class="modalhead"><div><div class="eyebrow">Checklist template</div><h2 id="templateDetailTitle">Detail Template</h2><div class="sub" id="templateDetailMeta"></div></div><button class="smallbtn" onclick="closeTemplateDetail()">✕ Tutup</button></div><div class="table-wrap"><table><thead><tr><th>No.</th><th>Kode</th><th>Item Pemeriksaan</th><th>Panduan</th><th>Wajib</th></tr></thead><tbody id="templateDetailRows"><tr><td colspan="5" class="emptyrow">Memuat item...</td></tr></tbody></table></div><div class="modalfoot"><button class="btn" onclick="closeTemplateDetail()">Tutup</button><button class="btn primary" id="templateDetailVersionBtn">Buat Versi Baru</button></div></div></div>
+
+<div class="modalback" id="templateModal" role="dialog" aria-modal="true" aria-labelledby="templateModalTitle"><div class="modal tpl-modal"><div class="modalhead"><div><div class="eyebrow">Template editor</div><h2 id="templateModalTitle">Buat Template Checklist</h2></div><button class="smallbtn" onclick="closeTemplateEditor()">✕ Tutup</button></div><form id="templateForm" onsubmit="saveTemplate(event)"><input type="hidden" id="templateSourceId"><div class="formgrid"><div class="field"><label for="templateName">Nama Template *</label><input id="templateName" required placeholder="Contoh: Checklist Inspeksi APAR"></div><div class="field"><label for="templateAssetType">Jenis Aset *</label><select id="templateAssetType" required><option value="">Pilih jenis aset</option><option>Fire Safety</option><option>Electrical</option><option>Machine</option><option>Utility</option><option>Other</option></select></div><div class="field full"><label for="templateDescription">Deskripsi</label><textarea id="templateDescription" placeholder="Tujuan atau ruang lingkup pemeriksaan"></textarea></div></div><div class="row" style="justify-content:space-between;margin:15px 0 8px"><div><b>Item Pemeriksaan</b><div class="sub">Atur kode, nama item, panduan, dan kewajiban jawaban.</div></div><button type="button" class="smallbtn" onclick="addTemplateItemRow()">＋ Tambah Item</button></div><div class="tpl-items-box"><div class="tpl-items-head"><span>Kode</span><span>Item Pemeriksaan *</span><span>Panduan</span><span>Wajib</span><span></span></div><div id="templateItemRows"></div></div><div id="templateFormMessage" class="message"></div><div class="modalfoot"><button type="button" class="btn" onclick="closeTemplateEditor()">Batal</button><button type="submit" class="btn primary" id="saveTemplateBtn">Simpan Template</button></div></form></div></div>
 </main>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -293,10 +385,76 @@ function downloadQr(id){const a=assetRows.find(x=>x.id===id);if(!a)return;const 
 function printQrLabel(){const a=assetRows.find(x=>document.getElementById('qrDetailToken')?.textContent.includes(x.qrId));if(!a)return;const url=getQrDataUrl(a.id);if(!url)return;const w=window.open('','_blank','width=500,height=600');if(!w){alert('Izinkan pop-up untuk mencetak label.');return;}w.document.write('<html><head><title>Label QR '+escapeHtml(a.code)+'</title><style>body{font-family:Arial;text-align:center;padding:25px}img{width:220px;height:220px}.label{border:1px solid #bbb;padding:20px;display:inline-block}</style></head><body><div class="label"><h2>'+escapeHtml(a.code)+'</h2><b>'+escapeHtml(a.name)+'</b><br><img src="'+url+'"><p>'+escapeHtml(a.location)+'</p><small>QR Inspection System</small></div><script>window.onload=()=>window.print()<\/script></body></html>');w.document.close();}
 function showView(name){
  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));const target=document.getElementById('view-'+name);if(target)target.classList.add('active');
- document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('active',b.dataset.view===name));const active=document.querySelector('#nav button.active');document.getElementById('crumb').textContent=active?active.innerText.trim():'Overview';if(name==='assets')loadAssets();if(name==='qr'){loadAssets().then(renderQrCards);}if(name==='findings')loadFindings();if(name==='overview')loadOverview();
+ document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('active',b.dataset.view===name));const active=document.querySelector('#nav button.active');document.getElementById('crumb').textContent=active?active.innerText.trim():'Overview';if(name==='assets')loadAssets();if(name==='checklist')loadChecklistTemplates();if(name==='qr'){loadAssets().then(renderQrCards);}if(name==='findings')loadFindings();if(name==='monitoring')loadMonitoring();if(name==='overview')loadOverview();if(name==='reports')loadReports();if(name==='users')loadUsers();
 }
 
 
+
+// CHECKLIST TEMPLATE MANAGEMENT
+let checklistTemplates=[], checklistItemCounts={};
+async function loadChecklistTemplates(){
+ if(!currentOrgId)return;
+ const body=document.getElementById('templateRows');if(body)body.innerHTML='<tr><td colspan="7" class="emptyrow">Memuat template...</td></tr>';
+ const {data,error}=await supabaseClient.from('elodie_inspection_templates').select('id,template_name,asset_type,description,version,is_active,created_at').eq('organization_id',currentOrgId).order('asset_type').order('template_name').order('version',{ascending:false});
+ if(error){if(body)body.innerHTML=`<tr><td colspan="7" class="emptyrow">Gagal memuat template: ${escapeHtml(error.message)}</td></tr>`;return;}
+ checklistTemplates=data||[];checklistItemCounts={};
+ if(checklistTemplates.length){const ids=checklistTemplates.map(x=>x.id);const {data:items,error:itemErr}=await supabaseClient.from('elodie_inspection_template_items').select('template_id').eq('organization_id',currentOrgId).in('template_id',ids);if(itemErr){if(body)body.innerHTML=`<tr><td colspan="7" class="emptyrow">Template terbaca, tetapi jumlah item gagal dimuat: ${escapeHtml(itemErr.message)}</td></tr>`;return;} (items||[]).forEach(x=>checklistItemCounts[x.template_id]=(checklistItemCounts[x.template_id]||0)+1);}
+ renderChecklistTemplates();
+}
+function renderChecklistTemplates(){
+ const body=document.getElementById('templateRows');if(!body)return;
+ const q=(document.getElementById('tplSearch')?.value||'').toLowerCase(),st=document.getElementById('tplStatusFilter')?.value||'';
+ const rows=checklistTemplates.filter(t=>(!q||(t.template_name+' '+t.asset_type).toLowerCase().includes(q))&&(!st||String(t.is_active)===st));
+ body.innerHTML=rows.length?rows.map(t=>`<tr><td><b>${escapeHtml(t.template_name)}</b><div class="sub">${escapeHtml(t.description||'')}</div></td><td>${escapeHtml(t.asset_type)}</td><td>v${t.version}</td><td>${checklistItemCounts[t.id]||0}</td><td><span class="pill ${t.is_active?'ok':'pending'}">${t.is_active?'AKTIF':'NONAKTIF'}</span></td><td>${formatShortDate(t.created_at)}</td><td><div class="tpl-actions"><button class="smallbtn" onclick="viewChecklistTemplate('${t.id}')">Lihat Item</button><button class="smallbtn" onclick="editChecklistTemplate('${t.id}')">Buat Versi Baru</button><button class="smallbtn" onclick="toggleChecklistTemplate('${t.id}',${!t.is_active})">${t.is_active?'Nonaktifkan':'Aktifkan'}</button></div></td></tr>`).join(''):'<tr><td colspan="7" class="emptyrow">Belum ada template atau tidak ada hasil filter.</td></tr>';
+ const active=checklistTemplates.filter(t=>t.is_active);document.getElementById('tplTotal').textContent=checklistTemplates.length;document.getElementById('tplActive').textContent=active.length;document.getElementById('tplAssetTypes').textContent=new Set(active.map(t=>t.asset_type)).size;document.getElementById('tplItems').textContent=active.reduce((n,t)=>n+(checklistItemCounts[t.id]||0),0);
+}
+function openTemplateEditor(){
+ if(!['admin','supervisor'].includes(currentMember?.role)){alert('Hanya Admin atau Supervisor yang dapat mengelola template.');return;}
+ document.getElementById('templateForm').reset();document.getElementById('templateSourceId').value='';document.getElementById('templateModalTitle').textContent='Buat Template Checklist';document.getElementById('saveTemplateBtn').textContent='Simpan Template';document.getElementById('templateItemRows').innerHTML='';hideTemplateMessage();addTemplateItemRow();document.getElementById('templateModal').classList.add('open');
+}
+function closeTemplateEditor(){document.getElementById('templateModal').classList.remove('open');}
+function addTemplateItemRow(item={}){
+ const root=document.getElementById('templateItemRows'),row=document.createElement('div');row.className='tpl-item-row';row.innerHTML=`<input class="tpl-item-code" placeholder="APAR-01" value="${escapeHtml(item.item_code||'')}"><input class="tpl-item-text" placeholder="Nama item pemeriksaan" required value="${escapeHtml(item.item_text||'')}"><input class="tpl-item-guidance" placeholder="Panduan (opsional)" value="${escapeHtml(item.guidance||'')}"><label class="tpl-toggle tpl-item-required"><input type="checkbox" ${item.is_required===false?'':'checked'}> Wajib</label><button type="button" class="smallbtn" title="Hapus item" onclick="this.closest('.tpl-item-row').remove()">✕</button>`;root.appendChild(row);
+}
+async function viewChecklistTemplate(id){
+ const t=checklistTemplates.find(x=>x.id===id);if(!t)return;
+ const body=document.getElementById('templateDetailRows');body.innerHTML='<tr><td colspan="5" class="emptyrow">Memuat item...</td></tr>';
+ document.getElementById('templateDetailTitle').textContent=t.template_name;
+ document.getElementById('templateDetailMeta').textContent=`Jenis aset: ${t.asset_type} · Versi: v${t.version} · ${t.is_active?'AKTIF':'NONAKTIF'}`;
+ document.getElementById('templateDetailVersionBtn').onclick=()=>{closeTemplateDetail();editChecklistTemplate(id);};
+ document.getElementById('templateDetailModal').classList.add('open');
+ const {data:items,error}=await supabaseClient.from('elodie_inspection_template_items').select('item_code,item_text,guidance,is_required,sort_order').eq('organization_id',currentOrgId).eq('template_id',id).order('sort_order',{ascending:true});
+ if(error){body.innerHTML=`<tr><td colspan="5" class="emptyrow">Gagal memuat item: ${escapeHtml(error.message)}</td></tr>`;return;}
+ body.innerHTML=(items||[]).length?(items||[]).map((item,i)=>`<tr><td>${item.sort_order??i+1}</td><td><b>${escapeHtml(item.item_code||'-')}</b></td><td>${escapeHtml(item.item_text||'-')}</td><td>${escapeHtml(item.guidance||'-')}</td><td><span class="pill ${item.is_required?'ok':'pending'}">${item.is_required?'WAJIB':'OPSIONAL'}</span></td></tr>`).join(''):'<tr><td colspan="5" class="emptyrow">Belum ada item pada template ini.</td></tr>';
+}
+function closeTemplateDetail(){document.getElementById('templateDetailModal').classList.remove('open');}
+async function editChecklistTemplate(id){
+ const t=checklistTemplates.find(x=>x.id===id);if(!t)return;
+ const {data:items,error}=await supabaseClient.from('elodie_inspection_template_items').select('item_code,item_text,guidance,is_required,sort_order').eq('organization_id',currentOrgId).eq('template_id',id).order('sort_order');if(error){alert('Gagal memuat item template: '+error.message);return;}
+ document.getElementById('templateForm').reset();document.getElementById('templateSourceId').value=id;document.getElementById('templateName').value=t.template_name;document.getElementById('templateAssetType').value=t.asset_type;document.getElementById('templateDescription').value=t.description||'';document.getElementById('templateModalTitle').textContent=`Buat Versi Baru · ${t.template_name} (v${t.version+1})`;document.getElementById('saveTemplateBtn').textContent='Simpan Versi Baru';document.getElementById('templateItemRows').innerHTML='';(items||[]).forEach(addTemplateItemRow);if(!(items||[]).length)addTemplateItemRow();hideTemplateMessage();document.getElementById('templateModal').classList.add('open');
+}
+function showTemplateMessage(message,type='err'){const el=document.getElementById('templateFormMessage');el.textContent=message;el.className='message show '+type;}
+function hideTemplateMessage(){const el=document.getElementById('templateFormMessage');el.textContent='';el.className='message';}
+async function saveTemplate(e){
+ e.preventDefault();if(!currentOrgId||!currentUser)return;
+ const name=document.getElementById('templateName').value.trim(),assetType=document.getElementById('templateAssetType').value,description=document.getElementById('templateDescription').value.trim()||null,sourceId=document.getElementById('templateSourceId').value;
+ const rows=[...document.querySelectorAll('#templateItemRows .tpl-item-row')].map((r,i)=>({item_code:r.querySelector('.tpl-item-code').value.trim()||`ITEM-${String(i+1).padStart(2,'0')}`,item_text:r.querySelector('.tpl-item-text').value.trim(),guidance:r.querySelector('.tpl-item-guidance').value.trim()||null,is_required:r.querySelector('input[type=checkbox]').checked,sort_order:i+1}));
+ if(!rows.length||rows.some(x=>!x.item_text)){showTemplateMessage('Tambahkan minimal satu item dan isi nama setiap item.');return;}
+ const codes=rows.map(x=>x.item_code.toLowerCase());if(new Set(codes).size!==codes.length){showTemplateMessage('Kode item tidak boleh duplikat dalam satu template.');return;}
+ const btn=document.getElementById('saveTemplateBtn');btn.disabled=true;btn.textContent='Menyimpan...';
+ let version=1;if(sourceId){const old=checklistTemplates.find(x=>x.id===sourceId);version=(old?.version||1)+1;}
+ const {data:newTemplate,error}=await supabaseClient.from('elodie_inspection_templates').insert({organization_id:currentOrgId,template_name:name,asset_type:assetType,description,version,is_active:true,created_by:currentUser.id}).select('id').single();
+ if(error){btn.disabled=false;btn.textContent=sourceId?'Simpan Versi Baru':'Simpan Template';showTemplateMessage('Gagal membuat template: '+error.message);return;}
+ const payload=rows.map(x=>({...x,organization_id:currentOrgId,template_id:newTemplate.id}));const {error:itemError}=await supabaseClient.from('elodie_inspection_template_items').insert(payload);
+ if(itemError){await supabaseClient.from('elodie_inspection_templates').delete().eq('id',newTemplate.id).eq('organization_id',currentOrgId);btn.disabled=false;btn.textContent=sourceId?'Simpan Versi Baru':'Simpan Template';showTemplateMessage('Template dibuat tetapi item gagal disimpan: '+itemError.message);return;}
+ if(sourceId){const {error:deactivateError}=await supabaseClient.from('elodie_inspection_templates').update({is_active:false}).eq('id',sourceId).eq('organization_id',currentOrgId);if(deactivateError){btn.disabled=false;btn.textContent='Simpan Versi Baru';showTemplateMessage('Versi baru tersimpan, tetapi versi sebelumnya gagal dinonaktifkan: '+deactivateError.message);await loadChecklistTemplates();return;}}
+ btn.disabled=false;closeTemplateEditor();await loadChecklistTemplates();
+}
+async function toggleChecklistTemplate(id,active){
+ const t=checklistTemplates.find(x=>x.id===id);if(!t)return;
+ if(active){const other=checklistTemplates.find(x=>x.id!==id&&x.asset_type===t.asset_type&&x.is_active);if(other&&!confirm(`Template aktif untuk jenis aset ${t.asset_type} saat ini adalah “${other.template_name}”. Aktifkan template ini dan nonaktifkan template tersebut?`))return;if(other){const {error:e1}=await supabaseClient.from('elodie_inspection_templates').update({is_active:false}).eq('id',other.id).eq('organization_id',currentOrgId);if(e1){alert('Gagal menonaktifkan template sebelumnya: '+e1.message);return;}}}
+ const {error}=await supabaseClient.from('elodie_inspection_templates').update({is_active:active}).eq('id',id).eq('organization_id',currentOrgId);if(error){alert('Gagal mengubah status template: '+error.message);return;}await loadChecklistTemplates();
+}
 
 // OVERVIEW: seluruh angka dan aktivitas dibaca langsung dari tabel organisasi aktif.
 function monthStartISO(offset=0){
@@ -360,7 +518,78 @@ async function loadOverview(){
 }
 function nextMonthFor(d){const n=new Date(d);n.setMonth(n.getMonth()+1);return n;}
 
+let monitoringRows=[];
+let monitoringResponses=[];
+let monitoringAssets=new Map();
+let monitoringMembers=new Map();
+function normalizeInspectionStatus(v){return String(v||'').toLowerCase();}
+function monitoringStatusPill(v){const s=normalizeInspectionStatus(v);const cls=['submitted','reviewed','verified','completed'].includes(s)?'ok':s==='draft'?'pending':'ng';return `<span class="pill ${cls}">${escapeHtml((s||'-').replaceAll('_',' ').toUpperCase())}</span>`;}
+function monitoringResultCounts(id){const rows=monitoringResponses.filter(r=>r.inspection_id===id);const c={ok:0,ng:0,na:0};rows.forEach(r=>{const k=String(r.result||'').toLowerCase();if(k in c)c[k]++;});return c;}
+async function loadMonitoring(){
+ if(!currentOrgId)return;
+ const body=document.getElementById('monRows');if(body)body.innerHTML='<tr><td colspan="9" class="emptyrow">Memuat data inspeksi...</td></tr>';
+ ['monTotal','monSubmitted','monDraft','monNg'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent='…';});
+ const org=currentOrgId;
+ const [iq,aq,mq,rq]=await Promise.all([
+  supabaseClient.from('elodie_inspection_inspections').select('*').eq('organization_id',org).order('inspection_date',{ascending:false}),
+  supabaseClient.from('elodie_inspection_assets').select('id,asset_code,asset_name,asset_type,location').eq('organization_id',org),
+  supabaseClient.from('elodie_inspection_members').select('user_id,full_name,role').eq('organization_id',org),
+  supabaseClient.from('elodie_inspection_responses').select('id,inspection_id,template_item_id,result,notes').eq('organization_id',org)
+ ]);
+ const err=[iq,aq,mq,rq].find(x=>x.error);
+ if(err){body.innerHTML=`<tr><td colspan="9" class="emptyrow">Gagal memuat data: ${escapeHtml(err.error.message)}</td></tr>`;['monTotal','monSubmitted','monDraft','monNg'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent='!';});return;}
+ monitoringRows=iq.data||[];monitoringResponses=rq.data||[];
+ monitoringAssets=new Map((aq.data||[]).map(a=>[a.id,a]));
+ monitoringMembers=new Map((mq.data||[]).map(m=>[m.user_id,m.full_name||m.role||'User']));
+ renderMonitoring();
+}
+function renderMonitoring(){
+ const q=(document.getElementById('monSearch')?.value||'').trim().toLowerCase();
+ const status=(document.getElementById('monStatus')?.value||'').toLowerCase();
+ const from=document.getElementById('monDateFrom')?.value||'',to=document.getElementById('monDateTo')?.value||'';
+ const filtered=monitoringRows.filter(x=>{
+  const a=monitoringAssets.get(x.asset_id)||{};const inspector=monitoringMembers.get(x.inspector_id)||'';
+  const hay=[x.inspection_number,a.asset_code,a.asset_name,inspector].join(' ').toLowerCase();
+  const d=String(x.inspection_date||x.created_at||'').slice(0,10);
+  return (!q||hay.includes(q))&&(!status||normalizeInspectionStatus(x.status)===status)&&(!from||d>=from)&&(!to||d<=to);
+ });
+ const totalResponses=filtered.reduce((n,x)=>n+monitoringResponses.filter(r=>r.inspection_id===x.id).length,0);
+ const submitted=filtered.filter(x=>['submitted','reviewed'].includes(normalizeInspectionStatus(x.status))).length;
+ const drafts=filtered.filter(x=>normalizeInspectionStatus(x.status)==='draft').length;
+ const ng=filtered.reduce((n,x)=>n+monitoringResponses.filter(r=>r.inspection_id===x.id&&String(r.result||'').toLowerCase()==='ng').length,0);
+ document.getElementById('monTotal').textContent=filtered.length;
+ document.getElementById('monSubmitted').textContent=submitted;
+ document.getElementById('monDraft').textContent=drafts;
+ document.getElementById('monNg').textContent=ng;
+ const body=document.getElementById('monRows');
+ body.innerHTML=filtered.length?filtered.map(x=>{
+  const a=monitoringAssets.get(x.asset_id)||{},c=monitoringResultCounts(x.id);
+  return `<tr><td><span class="asset">${escapeHtml(x.inspection_number||'-')}</span></td><td><span class="asset">${escapeHtml(a.asset_code||'Aset tidak ditemukan')}</span><br><span class="muted">${escapeHtml(a.asset_name||'')}</span></td><td>${escapeHtml(monitoringMembers.get(x.inspector_id)||'-')}</td><td>${formatShortDate(x.inspection_date||x.created_at)}</td><td>${monitoringStatusPill(x.status)}</td><td>${c.ok}</td><td><span class="${c.ng?'ng':''}">${c.ng}</span></td><td>${c.na}</td><td><button class="smallbtn" onclick="openInspectionDetail('${x.id}')">Detail</button></td></tr>`;
+ }).join(''):'<tr><td colspan="9" class="emptyrow">Tidak ada data inspeksi yang sesuai filter.</td></tr>';
+}
+function resetMonitoringFilters(){['monSearch','monStatus','monDateFrom','monDateTo'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});renderMonitoring();}
+function closeInspectionDetail(){document.getElementById('inspectionDetailBack')?.classList.remove('open');}
+async function openInspectionDetail(id){
+ const x=monitoringRows.find(r=>r.id===id);if(!x)return;
+ const a=monitoringAssets.get(x.asset_id)||{};const root=document.getElementById('inspectionDetailBody');
+ document.getElementById('inspectionDetailTitle').textContent=x.inspection_number||'Detail Inspeksi';
+ document.getElementById('inspectionDetailBack').classList.add('open');root.innerHTML='<div class="finding-empty">Memuat detail inspeksi...</div>';
+ const [itemsQ,templateQ]=await Promise.all([
+  supabaseClient.from('elodie_inspection_template_items').select('*').eq('template_id',x.template_id),
+  supabaseClient.from('elodie_inspection_templates').select('*').eq('id',x.template_id).maybeSingle()
+ ]);
+ const rows=monitoringResponses.filter(r=>r.inspection_id===id);
+ const items=new Map((itemsQ.data||[]).map(it=>[it.id,it]));
+ const count={ok:0,ng:0,na:0};rows.forEach(r=>{const k=String(r.result||'').toLowerCase();if(k in count)count[k]++;});
+ const labelFor=it=>it?.item_name||it?.item_text||it?.title||it?.description||it?.name||it?.label||'Item checklist';
+ const responseRows=rows.map((r,i)=>{const it=items.get(r.template_item_id);const result=String(r.result||'-').toUpperCase();const cls=result==='OK'?'ok':result==='NG'?'ng':'pending';return `<tr><td>${i+1}</td><td>${escapeHtml(labelFor(it))}</td><td><span class="pill ${cls}">${escapeHtml(result)}</span></td><td>${escapeHtml(r.notes||'-')}</td></tr>`;}).join('');
+ root.innerHTML=`<div class="mon-detail-grid"><div class="mon-detail-cell"><small>Aset</small><b>${escapeHtml(a.asset_code||'-')} · ${escapeHtml(a.asset_name||'')}</b></div><div class="mon-detail-cell"><small>Inspector</small><b>${escapeHtml(monitoringMembers.get(x.inspector_id)||'-')}</b></div><div class="mon-detail-cell"><small>Tanggal inspeksi</small><b>${formatShortDate(x.inspection_date||x.created_at)}</b></div><div class="mon-detail-cell"><small>Template</small><b>${escapeHtml(templateQ.data?.template_name||templateQ.data?.name||'Checklist')}</b></div><div class="mon-detail-cell"><small>Status</small><b>${monitoringStatusPill(x.status)}</b></div><div class="mon-detail-cell"><small>Hasil</small><b>OK ${count.ok} · NG ${count.ng} · NA ${count.na}</b></div></div><h3 style="font-size:13px;margin:12px 0 5px">Hasil Checklist</h3><div class="asset-table-wrap"><table class="mon-response-table"><thead><tr><th>No.</th><th>Item Pemeriksaan</th><th>Hasil</th><th>Catatan</th></tr></thead><tbody>${responseRows||'<tr><td colspan="4" class="emptyrow">Belum ada jawaban checklist.</td></tr>'}</tbody></table></div><h3 style="font-size:13px;margin:17px 0 7px">Catatan Umum</h3><div class="mon-notes">${escapeHtml(x.general_notes||'Tidak ada catatan umum.')}</div>`;
+ if(itemsQ.error)root.insertAdjacentHTML('beforeend',`<div class="notice" style="margin-top:12px">Nama item checklist belum dapat dimuat: ${escapeHtml(itemsQ.error.message)}. Hasil inspeksi tetap ditampilkan berdasarkan respons tersimpan.</div>`);
+}
+
 let findingRows = [];
+let findingMembers = [];
+let findingMemberMap = new Map();
 function findingStatusLabel(status){
  const labels={open:'Open',in_progress:'In Progress',completed:'Completed',verified:'Verified'};
  return labels[status]||status||'-';
@@ -376,7 +605,10 @@ async function loadFindings(){
   .select('id,organization_id,finding_number,inspection_id,response_id,description,immediate_action,risk_level,corrective_action,assigned_to,due_date,status,before_photo_path,after_photo_path,closing_notes,closed_by,closed_at,rejection_notes,verified_by,verified_at,created_by,created_at')
   .eq('organization_id',currentOrgId).order('created_at',{ascending:false});
  if(error){if(root)root.innerHTML='<div class="finding-empty">Gagal memuat temuan: '+escapeHtml(error.message)+'</div>';return;}
+ const membersQ=await supabaseClient.from('elodie_inspection_members').select('user_id,full_name,role,is_active').eq('organization_id',currentOrgId).eq('is_active',true);
  findingRows=data||[];
+ findingMembers=membersQ.data||[];
+ findingMemberMap=new Map(findingMembers.map(m=>[m.user_id,m.full_name||m.role||'User']));
  await renderFindings();
 }
 async function signedFindingPhoto(path){
@@ -406,19 +638,44 @@ async function renderFindings(){
   if(canVerify&&f.status==='completed'){
    actions=`<div class="finding-actions"><button class="approve" onclick="verifyFinding('${f.id}')">✓ Verifikasi & Setujui</button><button class="reject" onclick="rejectFinding('${f.id}')">↩ Tolak & Kembalikan</button></div>`;
   }
+  let manage='';
+  if(canVerify&&['open','in_progress'].includes(f.status)){
+   const memberOptions='<option value="">Belum ditentukan</option>'+findingMembers.map(m=>`<option value="${m.user_id}" ${f.assigned_to===m.user_id?'selected':''}>${escapeHtml(m.full_name||m.role||'User')} · ${escapeHtml(m.role||'')}</option>`).join('');
+   manage=`<div class="finding-manage"><h4>Penugasan & Rencana Perbaikan</h4><div class="finding-manage-grid">
+    <label>PIC<select id="pic-${f.id}">${memberOptions}</select></label>
+    <label>Tingkat Risiko<select id="risk-${f.id}"><option value="">Belum ditentukan</option>${['low','medium','high','critical'].map(v=>`<option value="${v}" ${f.risk_level===v?'selected':''}>${v.toUpperCase()}</option>`).join('')}</select></label>
+    <label>Tenggat Perbaikan<input id="due-${f.id}" type="date" value="${escapeHtml(f.due_date||'')}"></label>
+    <label class="wide">Rencana Perbaikan<textarea id="action-${f.id}" rows="2" placeholder="Tuliskan tindakan korektif yang diperlukan">${escapeHtml(f.corrective_action||'')}</textarea></label>
+   </div><div class="finding-actions"><button onclick="saveFindingPlan('${f.id}')">Simpan Penugasan</button><span class="muted" style="font-size:10px;align-self:center">Inspector memulai dan melaporkan perbaikan melalui Mobile Inspector.</span></div></div>`;
+  }
+  const assigned=f.assigned_to?`<div class="finding-desc"><b>PIC:</b> ${escapeHtml(findingMemberMap.get(f.assigned_to)||'Anggota tidak aktif/tidak ditemukan')}</div>`:'';
   const rejection=f.rejection_notes?`<div class="notice" style="margin-top:10px">Catatan penolakan sebelumnya: ${escapeHtml(f.rejection_notes)}</div>`:'';
   return `<article class="finding-card">
    <div class="finding-head"><div><b>${escapeHtml(f.finding_number||'Finding')}</b><div class="finding-desc">${escapeHtml(f.description||'-')}</div></div><span class="pill ${findingStatusClass(f.status)}">${findingStatusLabel(f.status)}</span></div>
    <div class="finding-meta"><span>Risiko: ${escapeHtml(f.risk_level||'-')}</span><span>Target: ${escapeHtml(f.due_date||'-')}</span><span>Dibuat: ${f.created_at?new Date(f.created_at).toLocaleString('id-ID'):'-'}</span></div>
    ${f.immediate_action?`<div class="finding-desc"><b>Tindakan langsung:</b> ${escapeHtml(f.immediate_action)}</div>`:''}
-   ${f.corrective_action?`<div class="finding-desc"><b>Rencana perbaikan:</b> ${escapeHtml(f.corrective_action)}</div>`:''}
+   ${assigned}${f.corrective_action?`<div class="finding-desc"><b>Rencana perbaikan:</b> ${escapeHtml(f.corrective_action)}</div>`:''}
    ${f.closing_notes?`<div class="finding-desc"><b>Laporan penyelesaian:</b> ${escapeHtml(f.closing_notes)}</div>`:''}
    <div class="finding-photos">${photos('Foto BEFORE',beforeUrl,f.before_photo_path)}${photos('Foto AFTER',afterUrl,f.after_photo_path)}</div>
-   ${rejection}${actions}
+   ${rejection}${manage}${actions}
   </article>`;
  }));
  root.innerHTML=cards.join('');
 }
+
+async function saveFindingPlan(id){
+ if(!['admin','supervisor'].includes(currentMember?.role)){alert('Hanya Admin atau Supervisor yang dapat mengatur penugasan.');return;}
+ const finding=findingRows.find(x=>x.id===id);if(!finding||!['open','in_progress'].includes(finding.status))return;
+ const assigned=document.getElementById('pic-'+id)?.value||null;
+ const risk=document.getElementById('risk-'+id)?.value||null;
+ const due=document.getElementById('due-'+id)?.value||null;
+ const action=document.getElementById('action-'+id)?.value.trim()||null;
+ const {error}=await supabaseClient.from('elodie_inspection_findings').update({assigned_to:assigned,risk_level:risk,due_date:due,corrective_action:action}).eq('id',id).eq('organization_id',currentOrgId).in('status',['open','in_progress']);
+ if(error){alert('Gagal menyimpan penugasan: '+error.message);return;}
+ alert('Penugasan dan rencana perbaikan berhasil disimpan.');
+ await loadFindings();
+}
+
 async function verifyFinding(id){
  if(!['admin','supervisor'].includes(currentMember?.role)){alert('Hanya Admin atau Supervisor yang dapat memverifikasi.');return;}
  const finding=findingRows.find(x=>x.id===id);if(!finding||finding.status!=='completed')return;
@@ -436,6 +693,102 @@ async function rejectFinding(id){
  const {error}=await supabaseClient.from('elodie_inspection_findings').update({status:'in_progress',rejection_notes:reason.trim(),verified_by:null,verified_at:null}).eq('id',id).eq('organization_id',currentOrgId).eq('status','completed');
  if(error){alert('Gagal mengembalikan temuan: '+error.message);return;}
  await loadFindings();
+}
+
+
+// REPORTS & ANALYTICS: data live dari tabel inspeksi, respons, aset, anggota, dan temuan.
+let reportData={inspections:[],assets:[],members:[],responses:[],findings:[]};
+let reportFiltered=[];
+function reportDateValue(x){return String(x?.inspection_date||x?.created_at||'').slice(0,10);}
+function reportCounts(id){const c={ok:0,ng:0,na:0};reportData.responses.filter(r=>r.inspection_id===id).forEach(r=>{const k=String(r.result||'').toLowerCase();if(k in c)c[k]++;});return c;}
+async function loadReports(){
+ if(!currentOrgId)return;
+ const ids=['repTotalInspections','repOk','repNg','repVerified'];ids.forEach(id=>{const e=document.getElementById(id);if(e)e.textContent='…';});
+ const org=currentOrgId;
+ const [iq,aq,mq,rq,fq]=await Promise.all([
+  supabaseClient.from('elodie_inspection_inspections').select('id,inspection_number,asset_id,inspector_id,template_id,inspection_date,status,created_at').eq('organization_id',org).order('inspection_date',{ascending:false}),
+  supabaseClient.from('elodie_inspection_assets').select('id,asset_code,asset_name,location').eq('organization_id',org),
+  supabaseClient.from('elodie_inspection_members').select('user_id,full_name,role').eq('organization_id',org),
+  supabaseClient.from('elodie_inspection_responses').select('id,inspection_id,result').eq('organization_id',org),
+  supabaseClient.from('elodie_inspection_findings').select('id,inspection_id,status,risk_level').eq('organization_id',org)
+ ]);
+ const err=[iq,aq,mq,rq,fq].find(q=>q.error);
+ if(err){document.getElementById('repInspectionRows').innerHTML=`<tr><td colspan="8" class="emptyrow">Gagal memuat laporan: ${escapeHtml(err.error.message)}</td></tr>`;ids.forEach(id=>{const e=document.getElementById(id);if(e)e.textContent='!';});return;}
+ reportData={inspections:iq.data||[],assets:aq.data||[],members:mq.data||[],responses:rq.data||[],findings:fq.data||[]};
+ const assetSelect=document.getElementById('reportAsset'),inspectorSelect=document.getElementById('reportInspector');
+ const oldAsset=assetSelect.value,oldInspector=inspectorSelect.value;
+ assetSelect.innerHTML='<option value="">Semua aset</option>'+reportData.assets.map(a=>`<option value="${a.id}">${escapeHtml(a.asset_code+' · '+a.asset_name)}</option>`).join('');
+ inspectorSelect.innerHTML='<option value="">Semua Inspector</option>'+reportData.members.map(m=>`<option value="${m.user_id}">${escapeHtml(m.full_name||m.role||'User')}</option>`).join('');
+ if([...assetSelect.options].some(o=>o.value===oldAsset))assetSelect.value=oldAsset;
+ if([...inspectorSelect.options].some(o=>o.value===oldInspector))inspectorSelect.value=oldInspector;
+ renderReports();
+}
+function renderReports(){
+ if(!reportData.inspections)return;
+ const from=document.getElementById('reportFrom')?.value||'',to=document.getElementById('reportTo')?.value||'',assetId=document.getElementById('reportAsset')?.value||'',inspectorId=document.getElementById('reportInspector')?.value||'',status=document.getElementById('reportStatus')?.value||'';
+ const assetMap=new Map(reportData.assets.map(a=>[a.id,a])),memberMap=new Map(reportData.members.map(m=>[m.user_id,m.full_name||m.role||'User']));
+ reportFiltered=reportData.inspections.filter(x=>{const d=reportDateValue(x);return(!from||d>=from)&&(!to||d<=to)&&(!assetId||x.asset_id===assetId)&&(!inspectorId||x.inspector_id===inspectorId)&&(!status||String(x.status||'').toLowerCase()===status);});
+ const ids=new Set(reportFiltered.map(x=>x.id));const responses=reportData.responses.filter(r=>ids.has(r.inspection_id));const c={ok:0,ng:0,na:0};responses.forEach(r=>{const k=String(r.result||'').toLowerCase();if(k in c)c[k]++;});
+ const relevantFindings=reportData.findings.filter(f=>ids.has(f.inspection_id));const verified=relevantFindings.filter(f=>String(f.status).toLowerCase()==='verified').length;
+ document.getElementById('repTotalInspections').textContent=reportFiltered.length;document.getElementById('repOk').textContent=c.ok;document.getElementById('repNg').textContent=c.ng;
+ const total=c.ok+c.ng+c.na;document.getElementById('repOkPct').textContent=`${total?(c.ok/total*100).toFixed(1):0}% dari seluruh jawaban`;document.getElementById('repNgPct').textContent=`${total?(c.ng/total*100).toFixed(1):0}% dari seluruh jawaban`;
+ document.getElementById('repVerified').textContent=verified;document.getElementById('repFindingTotal').textContent=`${relevantFindings.length} total temuan · ${relevantFindings.length?Math.round(verified/relevantFindings.length*100):0}% verified`;
+ const max=Math.max(1,c.ok,c.ng,c.na);const colors={ok:'#16a36a',ng:'#dc5454',na:'#8b9bad'};
+ document.getElementById('repResultBars').innerHTML=['ok','ng','na'].map(k=>`<div class="report-bar-row"><b>${k.toUpperCase()}</b><div class="report-track"><div class="report-fill" style="width:${c[k]/max*100}%;background:${colors[k]}"></div></div><span>${c[k]} (${total?(c[k]/total*100).toFixed(1):0}%)</span></div>`).join('');
+ const statuses=['open','in_progress','completed','verified'];document.getElementById('repFindingStatus').innerHTML=statuses.map(k=>`<div class="report-status-row"><span>${findingStatusLabel(k)}</span><b>${relevantFindings.filter(f=>String(f.status).toLowerCase()===k).length}</b></div>`).join('')||'<div class="finding-empty">Belum ada temuan.</div>';
+ const assetAgg=new Map();reportFiltered.forEach(x=>{const a=assetMap.get(x.asset_id)||{};const key=x.asset_id;const z=assetAgg.get(key)||{name:(a.asset_code||'Aset')+' · '+(a.asset_name||''),inspections:0,ok:0,ng:0,na:0};z.inspections++;const n=reportCounts(x.id);z.ok+=n.ok;z.ng+=n.ng;z.na+=n.na;assetAgg.set(key,z);});
+ const assetRows=[...assetAgg.values()].sort((a,b)=>b.ng-a.ng||b.inspections-a.inspections);
+ document.getElementById('repAssetRows').innerHTML=assetRows.length?assetRows.map(a=>`<tr><td>${escapeHtml(a.name)}</td><td>${a.inspections}</td><td>${a.ok}</td><td><b class="${a.ng?'ng':''}">${a.ng}</b></td><td>${a.na}</td></tr>`).join(''):'<tr><td colspan="5" class="emptyrow">Tidak ada data aset untuk filter ini.</td></tr>';
+ const risks=['critical','high','medium','low'];document.getElementById('repRiskRows').innerHTML=risks.map(k=>`<div class="report-status-row"><span>${k.toUpperCase()}</span><b>${relevantFindings.filter(f=>String(f.risk_level||'').toLowerCase()===k).length}</b></div>`).join('');
+ const body=document.getElementById('repInspectionRows');body.innerHTML=reportFiltered.length?reportFiltered.map(x=>{const a=assetMap.get(x.asset_id)||{},n=reportCounts(x.id);return `<tr><td><b>${escapeHtml(x.inspection_number||'-')}</b></td><td>${escapeHtml(a.asset_code||'-')}<br><span class="muted">${escapeHtml(a.asset_name||'')}</span></td><td>${escapeHtml(memberMap.get(x.inspector_id)||'-')}</td><td>${formatShortDate(x.inspection_date||x.created_at)}</td><td>${statusPill(x.status)}</td><td>${n.ok}</td><td>${n.ng}</td><td>${n.na}</td></tr>`;}).join(''):'<tr><td colspan="8" class="emptyrow">Tidak ada inspeksi yang sesuai filter.</td></tr>';
+}
+function resetReportFilters(){['reportFrom','reportTo','reportAsset','reportInspector','reportStatus'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});renderReports();}
+function exportReportsCsv(){
+ if(!reportFiltered.length){alert('Tidak ada data inspeksi untuk diekspor.');return;}
+ const assetMap=new Map(reportData.assets.map(a=>[a.id,a])),memberMap=new Map(reportData.members.map(m=>[m.user_id,m.full_name||m.role||'User']));
+ const rows=[['Nomor Inspeksi','Kode Aset','Nama Aset','Lokasi','Inspector','Tanggal','Status','OK','NG','NA']];
+ reportFiltered.forEach(x=>{const a=assetMap.get(x.asset_id)||{},n=reportCounts(x.id);rows.push([x.inspection_number||'',a.asset_code||'',a.asset_name||'',a.location||'',memberMap.get(x.inspector_id)||'',reportDateValue(x),x.status||'',n.ok,n.ng,n.na]);});
+ const csv='\uFEFFsep=,\r\n'+rows.map(row=>row.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\r\n');const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='QR-Inspection-Report-'+new Date().toISOString().slice(0,10)+'.csv';document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
+}
+function printReports(){window.print();}
+
+
+// USER MANAGEMENT — account creation is delegated to the secured Edge Function.
+let userRows=[];
+async function loadUsers(){
+ if(!currentOrgId)return;
+ const body=document.getElementById('userRows');if(body)body.innerHTML='<tr><td colspan="4" class="emptyrow">Memuat anggota organisasi...</td></tr>';
+ if(currentMember?.role!=='admin'){if(body)body.innerHTML='<tr><td colspan="4" class="emptyrow">Hanya Admin yang dapat mengelola pengguna.</td></tr>';return;}
+ const {data,error}=await supabaseClient.from('elodie_inspection_members').select('user_id,organization_id,full_name,role,is_active').eq('organization_id',currentOrgId).order('full_name');
+ if(error){if(body)body.innerHTML=`<tr><td colspan="4" class="emptyrow">Gagal memuat anggota: ${escapeHtml(error.message)}</td></tr>`;return;}
+ userRows=data||[];renderUsers();
+}
+function renderUsers(){
+ const body=document.getElementById('userRows');if(!body)return;
+ const q=(document.getElementById('userSearch')?.value||'').toLowerCase(),role=document.getElementById('userRoleFilter')?.value||'';
+ const list=userRows.filter(u=>(!q||[u.full_name,u.role,u.user_id].join(' ').toLowerCase().includes(q))&&(!role||u.role===role));
+ body.innerHTML=list.length?list.map(u=>`<tr><td><b>${escapeHtml(u.full_name||'Tanpa nama')}</b></td><td><span class="pill ${u.role==='admin'?'ok':u.role==='supervisor'?'pending':''}">${escapeHtml((u.role||'-').toUpperCase())}</span></td><td><span class="user-status ${u.is_active?'active':'inactive'}">${u.is_active?'AKTIF':'NONAKTIF'}</span></td><td><span class="user-id">${escapeHtml(u.user_id)}</span></td></tr>`).join(''):'<tr><td colspan="4" class="emptyrow">Tidak ada anggota yang sesuai filter.</td></tr>';
+ document.getElementById('userTotal').textContent=userRows.length;document.getElementById('userAdminCount').textContent=userRows.filter(u=>u.role==='admin').length;document.getElementById('userSupervisorCount').textContent=userRows.filter(u=>u.role==='supervisor').length;document.getElementById('userInspectorCount').textContent=userRows.filter(u=>u.role==='inspector').length;
+}
+function openUserModal(){
+ if(currentMember?.role!=='admin'){alert('Hanya Admin yang dapat menambahkan pengguna.');return;}
+ document.getElementById('userForm').reset();document.getElementById('userMethod').value='create_manual';document.getElementById('userFormMessage').textContent='';toggleUserMethod();document.getElementById('userModal').classList.add('open');
+}
+function closeUserModal(){document.getElementById('userModal').classList.remove('open');}
+function toggleUserMethod(){
+ const invite=document.getElementById('userMethod').value==='invite_email';document.getElementById('initialPasswordField').style.display=invite?'none':'grid';document.getElementById('newUserPassword').required=!invite;document.getElementById('saveUserBtn').textContent=invite?'Kirim Undangan':'Buat Akun';document.getElementById('userMethodNote').textContent=invite?'Undangan akan dikirim ke email pengguna. Setelah menyelesaikan proses undangan, Inspector dan Supervisor diwajibkan mengganti password sebelum menggunakan fitur inspeksi.':'Akun dibuat langsung. Inspector dan Supervisor wajib mengganti password awal saat login pertama. Admin tidak diwajibkan mengganti password oleh alur ini.';
+}
+async function submitUser(e){
+ e.preventDefault();if(currentMember?.role!=='admin'){alert('Hanya Admin yang dapat menambahkan pengguna.');return;}
+ const method=document.getElementById('userMethod').value,full_name=document.getElementById('newUserName').value.trim(),email=document.getElementById('newUserEmail').value.trim().toLowerCase(),role=document.getElementById('newUserRole').value,initial_password=document.getElementById('newUserPassword').value;
+ if(method==='create_manual'&&initial_password.length<12){document.getElementById('userFormMessage').textContent='Password awal minimal 12 karakter.';return;}
+ const btn=document.getElementById('saveUserBtn'),msg=document.getElementById('userFormMessage');btn.disabled=true;btn.textContent='Memproses...';msg.textContent='';
+ const body={action:method,full_name,email,role};if(method==='create_manual')body.initial_password=initial_password;
+ const {data,error}=await supabaseClient.functions.invoke('user-management',{body});
+ btn.disabled=false;btn.textContent=method==='invite_email'?'Kirim Undangan':'Buat Akun';
+ if(error){msg.textContent='Gagal: '+(error.message||'Edge Function tidak dapat dipanggil.');return;}
+ if(!data?.success){msg.textContent='Gagal: '+(data?.error||'Respons server tidak valid.');return;}
+ alert(data.message||'Pengguna berhasil diproses.');closeUserModal();await loadUsers();
 }
 
 </script>
