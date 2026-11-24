@@ -103,28 +103,28 @@ button{font:inherit;cursor:pointer}.app{min-height:100vh;display:flex}.sidebar{w
   <button data-view="users"><span class="ico">♙</span><span>User Management</span></button>
   <button data-view="settings"><span class="ico">⚙</span><span>Settings</span></button>
  </nav>
- <div class="sidebottom">QR Inspection System<br>Admin Console · UI Preview</div>
+ <div class="sidebottom">QR Inspection System<br>Admin Console · Live Data</div>
 </aside>
 <main class="main">
  <header class="topbar"><div class="crumb">Workspace&nbsp; / &nbsp;<b id="crumb">Overview</b></div><div class="topright"><div class="status"><span class="dot"></span><span id="connectionStatus">Supabase</span></div><span id="signedInUser" class="muted" style="font-size:11px"></span><button class="btn" onclick="signOutUser()">Keluar</button></div></header>
  <div class="content">
   <section class="view active" id="view-overview">
-   <div class="pagehead"><div><div class="eyebrow">Industrial inspection platform</div><h1>Overview</h1><p>Ringkasan aktivitas inspeksi dan kondisi aset dalam organisasi Anda.</p></div><div class="actions"><button class="btn" onclick="alert('Filter periode akan dihubungkan pada tahap integrasi.')">▤&nbsp; 30 Hari Terakhir</button><button class="btn primary" onclick="showView('assets')">＋ Tambah Aset</button></div></div>
+   <div class="pagehead"><div><div class="eyebrow">Industrial inspection platform</div><h1>Overview</h1><p>Ringkasan aktual aktivitas inspeksi dan kondisi aset organisasi.</p></div><div class="actions"><button class="btn" onclick="loadOverview()">↻ Refresh Data</button><button class="btn primary" onclick="showView('assets')">＋ Tambah Aset</button></div></div>
    <div class="grid stats">
-    <div class="card stat"><div class="stathead">Total Assets <span class="staticon">▣</span></div><div class="statvalue">128</div><div class="statfoot"><span class="up">+8</span> aset bulan ini</div></div>
-    <div class="card stat"><div class="stathead">Inspections This Month <span class="staticon">☷</span></div><div class="statvalue">342</div><div class="statfoot"><span class="up">+12.5%</span> dibanding bulan lalu</div></div>
-    <div class="card stat"><div class="stathead">Pending Inspections <span class="staticon">◷</span></div><div class="statvalue">17</div><div class="statfoot">Perlu ditindaklanjuti</div></div>
-    <div class="card stat"><div class="stathead">Open Findings <span class="staticon">⚑</span></div><div class="statvalue">9</div><div class="statfoot"><span style="color:var(--red);font-weight:700">3 overdue</span> tindakan terlambat</div></div>
+    <div class="card stat"><div class="stathead">Total Assets <span class="staticon">▣</span></div><div class="statvalue" id="ovTotalAssets">—</div><div class="statfoot">Aset terdaftar</div></div>
+    <div class="card stat"><div class="stathead">Inspections This Month <span class="staticon">☷</span></div><div class="statvalue" id="ovMonthInspections">—</div><div class="statfoot">Inspeksi bulan berjalan</div></div>
+    <div class="card stat"><div class="stathead">Draft Inspections <span class="staticon">◷</span></div><div class="statvalue" id="ovDraftInspections">—</div><div class="statfoot">Inspeksi belum disubmit</div></div>
+    <div class="card stat"><div class="stathead">Open Findings <span class="staticon">⚑</span></div><div class="statvalue" id="ovOpenFindings">—</div><div class="statfoot" id="ovOverdueFindings">Termasuk temuan lewat target</div></div>
    </div>
    <div class="grid cols">
-    <div class="card panel"><div class="panelhead"><div><h3>Inspection Activity</h3><div class="sub">Jumlah inspeksi per bulan</div></div><button class="link" onclick="showView('reports')">Lihat laporan →</button></div><div class="chart"><div class="barwrap"><div class="bar" style="height:42%"></div><div class="bar alt" style="height:28%"></div></div><div class="barwrap"><div class="bar" style="height:58%"></div><div class="bar alt" style="height:36%"></div></div><div class="barwrap"><div class="bar" style="height:49%"></div><div class="bar alt" style="height:41%"></div></div><div class="barwrap"><div class="bar" style="height:72%"></div><div class="bar alt" style="height:48%"></div></div><div class="barwrap"><div class="bar" style="height:65%"></div><div class="bar alt" style="height:53%"></div></div><div class="barwrap"><div class="bar" style="height:88%"></div><div class="bar alt" style="height:62%"></div></div></div><div class="months"><span>Jun</span><span>Jul</span><span>Agu</span><span>Sep</span><span>Okt</span><span>Nov</span></div></div>
-    <div class="card panel"><div class="panelhead"><div><h3>Inspection Status</h3><div class="sub">Distribusi hasil inspeksi</div></div></div><div class="donutrow"><div class="donut"><div class="donutcenter"><b>342</b><small>Total</small></div></div><div class="legend"><div class="legendrow"><span class="legendleft"><i class="swatch" style="background:#16a36a"></i>OK</span><b>68%</b></div><div class="legendrow"><span class="legendleft"><i class="swatch" style="background:#e4a43b"></i>NG</span><b>18%</b></div><div class="legendrow"><span class="legendleft"><i class="swatch" style="background:#d95b5b"></i>Pending</span><b>14%</b></div></div></div></div>
+    <div class="card panel"><div class="panelhead"><div><h3>Inspection Activity</h3><div class="sub">Jumlah inspeksi per bulan · 6 bulan terakhir</div></div><button class="link" onclick="showView('monitoring')">Lihat monitoring →</button></div><div class="chart" id="ovActivityChart"><div class="finding-empty">Memuat data...</div></div><div class="months" id="ovActivityMonths"></div></div>
+    <div class="card panel"><div class="panelhead"><div><h3>Inspection Results</h3><div class="sub">Distribusi jawaban checklist</div></div></div><div class="donutrow"><div class="donut" id="ovResultDonut" style="background:conic-gradient(#e5ebf2 0 100%)"><div class="donutcenter"><b id="ovResultTotal">0</b><small>Responses</small></div></div><div class="legend"><div class="legendrow"><span class="legendleft"><i class="swatch" style="background:#16a36a"></i>OK</span><b id="ovOkCount">0</b></div><div class="legendrow"><span class="legendleft"><i class="swatch" style="background:#e4a43b"></i>NG</span><b id="ovNgCount">0</b></div><div class="legendrow"><span class="legendleft"><i class="swatch" style="background:#8b9bad"></i>NA</span><b id="ovNaCount">0</b></div></div></div></div>
    </div>
    <div class="grid bottom">
-    <div class="card panel"><div class="panelhead"><div><h3>Recent Inspections</h3><div class="sub">Aktivitas inspeksi terbaru</div></div><button class="link" onclick="showView('monitoring')">Lihat semua →</button></div><table><thead><tr><th>Asset</th><th>Inspector</th><th>Date</th><th>Result</th></tr></thead><tbody><tr><td><span class="asset">APAR-001</span><br><span class="muted">Fire Extinguisher</span></td><td>Andi Saputra</td><td>23 Nov 2026</td><td><span class="pill ok">OK</span></td></tr><tr><td><span class="asset">PANEL-014</span><br><span class="muted">Electrical Panel</span></td><td>Budi Santoso</td><td>23 Nov 2026</td><td><span class="pill ng">NG</span></td></tr><tr><td><span class="asset">FORK-008</span><br><span class="muted">Forklift</span></td><td>Rina Putri</td><td>22 Nov 2026</td><td><span class="pill ok">OK</span></td></tr><tr><td><span class="asset">PUMP-003</span><br><span class="muted">Water Pump</span></td><td>Andi Saputra</td><td>22 Nov 2026</td><td><span class="pill pending">Pending</span></td></tr></tbody></table></div>
-    <div class="card panel"><div class="panelhead"><div><h3>Latest Activities</h3><div class="sub">Pembaruan sistem</div></div></div><div class="activity"><div class="activityitem"><div class="activityicon">＋</div><div><b>Aset baru ditambahkan</b><small>APAR-021 · 20 menit lalu</small></div></div><div class="activityitem"><div class="activityicon">⚑</div><div><b>Temuan inspeksi dibuat</b><small>PANEL-014 · 1 jam lalu</small></div></div><div class="activityitem"><div class="activityicon">✓</div><div><b>Inspeksi selesai</b><small>FORK-008 · 3 jam lalu</small></div></div><div class="activityitem"><div class="activityicon">♙</div><div><b>Petugas baru diundang</b><small>Inspector · Kemarin</small></div></div></div></div>
+    <div class="card panel"><div class="panelhead"><div><h3>Recent Inspections</h3><div class="sub">Lima inspeksi terbaru</div></div><button class="link" onclick="showView('monitoring')">Lihat semua →</button></div><div class="asset-table-wrap"><table><thead><tr><th>Nomor</th><th>Aset</th><th>Inspector</th><th>Tanggal</th><th>Status</th><th>Hasil</th></tr></thead><tbody id="ovRecentInspections"><tr><td colspan="6" class="emptyrow">Memuat data...</td></tr></tbody></table></div></div>
+    <div class="card panel"><div class="panelhead"><div><h3>Latest Findings</h3><div class="sub">Temuan terbaru dan status tindak lanjut</div></div><button class="link" onclick="showView('findings')">Lihat semua →</button></div><div class="activity" id="ovLatestFindings"><div class="finding-empty">Memuat data...</div></div></div>
    </div>
-   <div class="notice" style="margin-top:16px">Catatan: seluruh angka, grafik, nama aset, dan aktivitas pada tampilan ini adalah data contoh untuk preview desain, bukan data aktual dari Supabase.</div>
+   <div class="notice" style="margin-top:16px">Seluruh ringkasan diambil dari data Supabase pada organisasi yang sedang login. Jadwal inspeksi belum dihitung karena tabel jadwal belum tersedia pada skema saat ini.</div>
   </section>
   <section class="view" id="view-assets">
    <div class="pagehead"><div><div class="eyebrow">Master data</div><h1>Asset Management</h1><p>Kelola identitas, kategori, lokasi, dan status aset organisasi.</p></div><button class="btn primary" onclick="openAssetModal()">＋ Tambah Aset</button></div>
@@ -293,9 +293,72 @@ function downloadQr(id){const a=assetRows.find(x=>x.id===id);if(!a)return;const 
 function printQrLabel(){const a=assetRows.find(x=>document.getElementById('qrDetailToken')?.textContent.includes(x.qrId));if(!a)return;const url=getQrDataUrl(a.id);if(!url)return;const w=window.open('','_blank','width=500,height=600');if(!w){alert('Izinkan pop-up untuk mencetak label.');return;}w.document.write('<html><head><title>Label QR '+escapeHtml(a.code)+'</title><style>body{font-family:Arial;text-align:center;padding:25px}img{width:220px;height:220px}.label{border:1px solid #bbb;padding:20px;display:inline-block}</style></head><body><div class="label"><h2>'+escapeHtml(a.code)+'</h2><b>'+escapeHtml(a.name)+'</b><br><img src="'+url+'"><p>'+escapeHtml(a.location)+'</p><small>QR Inspection System</small></div><script>window.onload=()=>window.print()<\/script></body></html>');w.document.close();}
 function showView(name){
  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));const target=document.getElementById('view-'+name);if(target)target.classList.add('active');
- document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('active',b.dataset.view===name));const active=document.querySelector('#nav button.active');document.getElementById('crumb').textContent=active?active.innerText.trim():'Overview';if(name==='assets')loadAssets();if(name==='qr'){loadAssets().then(renderQrCards);}if(name==='findings')loadFindings();
+ document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('active',b.dataset.view===name));const active=document.querySelector('#nav button.active');document.getElementById('crumb').textContent=active?active.innerText.trim():'Overview';if(name==='assets')loadAssets();if(name==='qr'){loadAssets().then(renderQrCards);}if(name==='findings')loadFindings();if(name==='overview')loadOverview();
 }
 
+
+
+// OVERVIEW: seluruh angka dan aktivitas dibaca langsung dari tabel organisasi aktif.
+function monthStartISO(offset=0){
+ const d=new Date();d.setDate(1);d.setHours(0,0,0,0);d.setMonth(d.getMonth()+offset);return d;
+}
+function formatShortDate(value){
+ if(!value)return '-';
+ const d=new Date(value);return Number.isNaN(d.getTime())?String(value):d.toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'});
+}
+function statusPill(status){
+ const s=String(status||'').toLowerCase();
+ const cls=['verified','submitted','completed'].includes(s)?'ok':(['draft','in_progress'].includes(s)?'pending':'ng');
+ return `<span class="pill ${cls}">${escapeHtml(s.replaceAll('_',' ').toUpperCase()||'-')}</span>`;
+}
+async function loadOverview(){
+ if(!currentOrgId)return;
+ const ids=['ovTotalAssets','ovMonthInspections','ovDraftInspections','ovOpenFindings'];
+ ids.forEach(id=>{const el=document.getElementById(id);if(el)el.textContent='…';});
+ const org=currentOrgId;
+ const [assetsQ,inspectionsQ,findingsQ,responsesQ,membersQ]=await Promise.all([
+  supabaseClient.from('elodie_inspection_assets').select('id,asset_code,asset_name,asset_type,is_active').eq('organization_id',org),
+  supabaseClient.from('elodie_inspection_inspections').select('id,inspection_number,asset_id,inspector_id,inspection_date,status,created_at').eq('organization_id',org).order('created_at',{ascending:false}),
+  supabaseClient.from('elodie_inspection_findings').select('id,finding_number,description,status,due_date,created_at').eq('organization_id',org).order('created_at',{ascending:false}),
+  supabaseClient.from('elodie_inspection_responses').select('inspection_id,result').eq('organization_id',org),
+  supabaseClient.from('elodie_inspection_members').select('user_id,full_name,role').eq('organization_id',org)
+ ]);
+ const failed=[assetsQ,inspectionsQ,findingsQ,responsesQ,membersQ].find(x=>x.error);
+ if(failed){ids.forEach(id=>{const el=document.getElementById(id);if(el)el.textContent='!';});document.getElementById('ovRecentInspections').innerHTML=`<tr><td colspan="6" class="emptyrow">Gagal memuat Overview: ${escapeHtml(failed.error.message)}</td></tr>`;return;}
+ const assets=assetsQ.data||[], inspections=inspectionsQ.data||[], findings=findingsQ.data||[], responses=responsesQ.data||[], members=membersQ.data||[];
+ const assetMap=new Map(assets.map(x=>[x.id,x])), memberMap=new Map(members.map(x=>[x.user_id,x.full_name||x.role||'User']));
+ const now=new Date(), thisMonth=monthStartISO(), nextMonth=monthStartISO(1);
+ const inMonth=inspections.filter(x=>{const d=new Date(x.inspection_date||x.created_at);return d>=thisMonth&&d<nextMonth;});
+ const open=findings.filter(x=>['open','in_progress','completed'].includes(String(x.status||'').toLowerCase()));
+ const overdue=open.filter(x=>x.due_date&&new Date(x.due_date+'T23:59:59')<now);
+ document.getElementById('ovTotalAssets').textContent=assets.length;
+ document.getElementById('ovMonthInspections').textContent=inMonth.length;
+ document.getElementById('ovDraftInspections').textContent=inspections.filter(x=>String(x.status).toLowerCase()==='draft').length;
+ document.getElementById('ovOpenFindings').textContent=open.length;
+ document.getElementById('ovOverdueFindings').textContent=`${overdue.length} temuan melewati target`;
+ const counts={ok:0,ng:0,na:0};
+ responses.forEach(r=>{const k=String(r.result||'').toLowerCase();if(k in counts)counts[k]++;});
+ const total=counts.ok+counts.ng+counts.na;
+ document.getElementById('ovResultTotal').textContent=total;
+ document.getElementById('ovOkCount').textContent=counts.ok;
+ document.getElementById('ovNgCount').textContent=counts.ng;
+ document.getElementById('ovNaCount').textContent=counts.na;
+ const pct=total?counts.ok/total*100:0, pct2=total?(counts.ok+counts.ng)/total*100:0;
+ document.getElementById('ovResultDonut').style.background=total?`conic-gradient(#16a36a 0 ${pct}%,#e4a43b ${pct}% ${pct2}%,#8b9bad ${pct2}% 100%)`:'conic-gradient(#e5ebf2 0 100%)';
+ const months=Array.from({length:6},(_,i)=>monthStartISO(i-5));
+ const monthCounts=months.map((d,i)=>inspections.filter(x=>{const t=new Date(x.inspection_date||x.created_at);return t>=d&&t<(months[i+1]||nextMonthFor(d));}).length);
+ const max=Math.max(1,...monthCounts);
+ document.getElementById('ovActivityChart').innerHTML=monthCounts.map(n=>`<div class="barwrap" title="${n} inspeksi"><div class="bar" style="height:${Math.max(3,n/max*92)}%"></div></div>`).join('');
+ document.getElementById('ovActivityMonths').innerHTML=months.map(d=>`<span>${d.toLocaleDateString('id-ID',{month:'short'})}</span>`).join('');
+ const recent=inspections.slice(0,5);
+ document.getElementById('ovRecentInspections').innerHTML=recent.length?recent.map(x=>{
+  const a=assetMap.get(x.asset_id), rs=responses.filter(r=>r.inspection_id===x.id);
+  const result=rs.some(r=>String(r.result).toLowerCase()==='ng')?'NG':rs.length&&rs.every(r=>String(r.result).toLowerCase()==='na')?'NA':rs.length?'OK':'-';
+  return `<tr><td>${escapeHtml(x.inspection_number||'-')}</td><td><span class="asset">${escapeHtml(a?.asset_code||'Aset tidak ditemukan')}</span><br><span class="muted">${escapeHtml(a?.asset_name||'')}</span></td><td>${escapeHtml(memberMap.get(x.inspector_id)||'-')}</td><td>${formatShortDate(x.inspection_date||x.created_at)}</td><td>${statusPill(x.status)}</td><td><span class="pill ${result==='NG'?'ng':result==='OK'?'ok':'pending'}">${result}</span></td></tr>`;
+ }).join(''):'<tr><td colspan="6" class="emptyrow">Belum ada inspeksi.</td></tr>';
+ document.getElementById('ovLatestFindings').innerHTML=findings.length?findings.slice(0,5).map(f=>`<div class="activityitem"><div class="activityicon">⚑</div><div><b>${escapeHtml(f.finding_number||'Finding')}</b><small>${escapeHtml(f.description||'')} · ${findingStatusLabel(f.status)}</small></div></div>`).join(''):'<div class="finding-empty">Belum ada temuan.</div>';
+}
+function nextMonthFor(d){const n=new Date(d);n.setMonth(n.getMonth()+1);return n;}
 
 let findingRows = [];
 function findingStatusLabel(status){
